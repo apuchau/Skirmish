@@ -6,7 +6,7 @@ import kotlin.test.assertFailsWith
 class BattleTests {
 
 	@Test
-	fun soldiers_cannot_be_in_the_same_initial_position() {
+	fun if_two_soldiers_in_the_same_initial_position_throw_exception() {
 
 		val battlefield = Battlefield(2, 1)
 		val soldiersPossitioned = listOf(
@@ -20,7 +20,7 @@ class BattleTests {
 	}
 
 	@Test
-	fun only_one_instance_of_each_soldier() {
+	fun if_any_soldier_duplicate_throw_exception() {
 
 		val battlefield = Battlefield(2, 1)
 		val soldiersPossitioned = listOf(
@@ -29,6 +29,17 @@ class BattleTests {
 		)
 
 		assertFailsWith(DuplicatedSoldier::class) {
+			Battle(battlefield, soldiersPossitioned)
+		}
+	}
+
+	@Test
+	fun if_no_soldiers_initially_in_battle_throw_exception() {
+
+		val battlefield = Battlefield(2, 1)
+		val soldiersPossitioned = emptyList<Pair<Soldier,BattlefieldPosition>>()
+
+		assertFailsWith(BattleWithNoSoldiers::class) {
 			Battle(battlefield, soldiersPossitioned)
 		}
 	}

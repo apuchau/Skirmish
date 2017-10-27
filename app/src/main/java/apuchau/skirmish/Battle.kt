@@ -5,10 +5,17 @@ class Battle(val battlefield: Battlefield, soldiers: Collection<Pair<Soldier, Ba
     private val soldiers: MutableList<Pair<Soldier,BattlefieldPosition>>
 
     init {
+		 checkEnoughSoldiersForBattle(soldiers);
 		 checkSoldiersDontOccupySameSpaces(soldiers);
 		 checkNoDuplicateSoldiers(soldiers);
 		 this.soldiers = soldiers.toMutableList()
     }
+
+	private fun checkEnoughSoldiersForBattle(soldiers: Collection<Pair<Soldier, BattlefieldPosition>>) {
+		if (soldiers.isEmpty()) {
+			throw BattleWithNoSoldiers("Battle can't happen without soldiers")
+		}
+	}
 
 	private fun checkNoDuplicateSoldiers(soldiers: Collection<Pair<Soldier, BattlefieldPosition>>) {
 
@@ -19,7 +26,7 @@ class Battle(val battlefield: Battlefield, soldiers: Collection<Pair<Soldier, Ba
 				.count();
 
 		if (soldiers.size != numDifferentSoldiers) {
-			throw DuplicatedSoldier("There are duplicated soldiers in the battle");
+			throw DuplicatedSoldier("There are duplicated soldiers in the battle")
 		}
 	}
 
