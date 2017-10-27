@@ -11,15 +11,19 @@ class BattleAcceptanceTests {
 
     fun a_skirmish() {
 
-        val battlefield = Battlefield(2, 1);
-        val soldiersPossitioned = listOf(Pair(Soldier(), BattlefieldPosition(1,1)));
+        val battlefield = Battlefield(2, 1)
+        val soldiersPossitioned = listOf(
+                Pair(Soldier(), BattlefieldPosition(1,1)),
+                Pair(Soldier(), BattlefieldPosition(2,1))
+        )
 
-        val battle = Battle(battlefield, soldiersPossitioned);
+        val battle = Battle(battlefield, soldiersPossitioned)
 
-        assertEquals(2, battle.battlefield.width);
-        assertEquals(1, battle.battlefield.height);
+        assertEquals(2, battle.battlefield.width)
+        assertEquals(1, battle.battlefield.height)
         assert(battle.status()).containsExactly(
-                Pair(Soldier(), BattlefieldPosition(1,1))
+                Pair(Soldier(), BattlefieldPosition(1,1)),
+                Pair(Soldier(), BattlefieldPosition(2,1))
         )
     }
 
