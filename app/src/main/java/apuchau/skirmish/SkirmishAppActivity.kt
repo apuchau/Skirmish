@@ -3,7 +3,7 @@ package apuchau.skirmish
 import android.app.Activity
 import android.os.Bundle
 
-class MainActivity : Activity() {
+class SkirmishAppActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
