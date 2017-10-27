@@ -1,19 +1,23 @@
 package apuchau.skirmish
 
-class Battle(val battlefield: Battlefield, soldiers: Collection<Pair<Soldier, BattlefieldPosition>>) {
+import apuchau.skirmish.exception.BattleWithNoSoldiers
+import apuchau.skirmish.exception.DuplicatedSoldier
+import apuchau.skirmish.exception.InvalidSoldiersPosition
 
-    private val soldiers: MutableList<Pair<Soldier,BattlefieldPosition>>
+class Battle(val battlefield: Battlefield, soldiersPositions: Collection<Pair<Soldier, BattlefieldPosition>>) {
+
+    private val soldiersPositions: MutableList<Pair<Soldier,BattlefieldPosition>>
 
     init {
-		 checkEnoughSoldiersForBattle(soldiers);
-		 checkSoldiersDontOccupySameSpaces(soldiers);
-		 checkNoDuplicateSoldiers(soldiers);
-		 this.soldiers = soldiers.toMutableList()
+		 checkEnoughSoldiersForBattle(soldiersPositions);
+		 checkSoldiersDontOccupySameSpaces(soldiersPositions);
+		 checkNoDuplicateSoldiers(soldiersPositions);
+		 this.soldiersPositions = soldiersPositions.toMutableList()
     }
 
 	private fun checkEnoughSoldiersForBattle(soldiers: Collection<Pair<Soldier, BattlefieldPosition>>) {
 		if (soldiers.isEmpty()) {
-			throw BattleWithNoSoldiers("Battle can't happen without soldiers")
+			throw BattleWithNoSoldiers("Battle can't happen without soldiersPositions")
 		}
 	}
 
@@ -21,12 +25,12 @@ class Battle(val battlefield: Battlefield, soldiers: Collection<Pair<Soldier, Ba
 
 		var numDifferentSoldiers =
 			soldiers
-				.map(Pair<Soldier,BattlefieldPosition>::first)
+				.map{it.first}
 				.distinct()
 				.count();
 
 		if (soldiers.size != numDifferentSoldiers) {
-			throw DuplicatedSoldier("There are duplicated soldiers in the battle")
+			throw DuplicatedSoldier("There are duplicated soldiersPositions in the battle")
 		}
 	}
 
@@ -34,18 +38,18 @@ class Battle(val battlefield: Battlefield, soldiers: Collection<Pair<Soldier, Ba
 
 		 val numDifferentPositions =
 			 soldiers
-				 .map(Pair<Soldier,BattlefieldPosition>::second)
+				 .map{it.second}
 				 .distinct()
 				 .count()
 
 		 if (soldiers.size != numDifferentPositions) {
-			 throw InvalidSoldiersPosition("Some soldiers occupy the same battlefield spot");
+			 throw InvalidSoldiersPosition("Some soldiersPositions occupy the same battlefield spot");
 		 }
 
     }
 
     fun status(): Collection<Pair<Soldier,BattlefieldPosition>> {
-        return soldiers.toList()
+        return soldiersPositions.toList()
     }
 
 }

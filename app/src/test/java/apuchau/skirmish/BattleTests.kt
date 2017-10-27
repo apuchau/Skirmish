@@ -1,5 +1,8 @@
 package apuchau.skirmish
 
+import apuchau.skirmish.exception.BattleWithNoSoldiers
+import apuchau.skirmish.exception.DuplicatedSoldier
+import apuchau.skirmish.exception.InvalidSoldiersPosition
 import org.junit.Test
 import kotlin.test.assertFailsWith
 
@@ -9,13 +12,13 @@ class BattleTests {
 	fun if_two_soldiers_in_the_same_initial_position_throw_exception() {
 
 		val battlefield = Battlefield(2, 1)
-		val soldiersPossitioned = listOf(
+		val soldiersPositions = listOf(
 			Pair(Soldier(SoldierId("SoldierA")), BattlefieldPosition(1,1)),
 			Pair(Soldier(SoldierId("SoldierB")), BattlefieldPosition(1,1))
 		)
 
 		assertFailsWith(InvalidSoldiersPosition::class) {
-			Battle(battlefield, soldiersPossitioned)
+			Battle(battlefield, soldiersPositions)
 		}
 	}
 
@@ -23,13 +26,13 @@ class BattleTests {
 	fun if_any_soldier_duplicate_throw_exception() {
 
 		val battlefield = Battlefield(2, 1)
-		val soldiersPossitioned = listOf(
+		val soldiersPositions = listOf(
 			Pair(Soldier(SoldierId("SoldierA")), BattlefieldPosition(1,1)),
 			Pair(Soldier(SoldierId("SoldierA")), BattlefieldPosition(2,1))
 		)
 
 		assertFailsWith(DuplicatedSoldier::class) {
-			Battle(battlefield, soldiersPossitioned)
+			Battle(battlefield, soldiersPositions)
 		}
 	}
 
@@ -37,10 +40,10 @@ class BattleTests {
 	fun if_no_soldiers_initially_in_battle_throw_exception() {
 
 		val battlefield = Battlefield(2, 1)
-		val soldiersPossitioned = emptyList<Pair<Soldier,BattlefieldPosition>>()
+		val soldiersPositions = emptyList<Pair<Soldier,BattlefieldPosition>>()
 
 		assertFailsWith(BattleWithNoSoldiers::class) {
-			Battle(battlefield, soldiersPossitioned)
+			Battle(battlefield, soldiersPositions)
 		}
 	}
 }
