@@ -1,12 +1,14 @@
 package apuchau.skirmish
 
-class Soldier {
+class Soldier(val soldierId: SoldierId) {
 
     override fun hashCode(): Int {
-        return 1;
+        return soldierId.hashCode();
     }
 
     override fun equals(other: Any?): Boolean {
-        return (other != null) && (other is Soldier);
+        return (other != null)
+           && (other is Soldier)
+           && (soldierId == other.soldierId);
     }
 }

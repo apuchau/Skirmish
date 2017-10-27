@@ -7,14 +7,17 @@ import org.junit.Test
 
 class BattleAcceptanceTests {
 
+    private val KingArthur = Soldier(SoldierId("King Arthur"))
+    private val Mordred = Soldier(SoldierId("Mordred"))
+
     @Test
 
     fun a_skirmish() {
 
         val battlefield = Battlefield(2, 1)
         val soldiersPossitioned = listOf(
-                Pair(Soldier(), BattlefieldPosition(1,1)),
-                Pair(Soldier(), BattlefieldPosition(2,1))
+                Pair(KingArthur, BattlefieldPosition(1,1)),
+                Pair(Mordred, BattlefieldPosition(2,1))
         )
 
         val battle = Battle(battlefield, soldiersPossitioned)
@@ -22,8 +25,8 @@ class BattleAcceptanceTests {
         assertEquals(2, battle.battlefield.width)
         assertEquals(1, battle.battlefield.height)
         assert(battle.status()).containsExactly(
-                Pair(Soldier(), BattlefieldPosition(1,1)),
-                Pair(Soldier(), BattlefieldPosition(2,1))
+                Pair(KingArthur, BattlefieldPosition(1,1)),
+                Pair(Mordred, BattlefieldPosition(2,1))
         )
     }
 
