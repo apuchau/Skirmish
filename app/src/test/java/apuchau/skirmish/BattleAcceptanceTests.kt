@@ -12,7 +12,7 @@ class BattleAcceptanceTests {
 
     fun a_skirmish() {
 
-        val battlefield = Battlefield(2, 1)
+        val battlefield = Battlefield(BattlefieldBoundaries(2,1))
         val soldiersPositions = SoldiersBattlePositions(listOf(
                 Pair(KingArthur, BattlefieldPosition(1,1)),
                 Pair(Mordred, BattlefieldPosition(2,1)))
@@ -20,8 +20,6 @@ class BattleAcceptanceTests {
 
         val battle = Battle(battlefield, soldiersPositions)
 
-        assertEquals(2, battle.battlefield.width)
-        assertEquals(1, battle.battlefield.height)
         assertEquals(battle.status(), SoldiersBattlePositions(listOf(
                 Pair(KingArthur, BattlefieldPosition(1,1)),
                 Pair(Mordred, BattlefieldPosition(2,1)))))

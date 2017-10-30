@@ -1,21 +1,14 @@
 package apuchau.skirmish
 
-class Battlefield(val width: Int, val height: Int) {
-
-    val boundaries: BattlefieldBoundaries
-
-    init {
-        boundaries = BattlefieldBoundaries(width, height)
-    }
+class Battlefield(val boundaries : BattlefieldBoundaries) {
 
     override fun hashCode(): Int {
-        return width + height
+        return boundaries.hashCode()
     }
 
     override fun equals(other: Any?): Boolean {
         return (other != null)
                     && (other is Battlefield)
-                    && (width == other.width)
-                    && (height == other.height)
+                    && (boundaries == other.boundaries)
     }
 }

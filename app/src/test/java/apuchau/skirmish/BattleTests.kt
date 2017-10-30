@@ -10,7 +10,7 @@ class BattleTests {
 	@Test
 	fun if_no_soldiers_initially_in_battle_throw_exception() {
 
-		val battlefield = Battlefield(2, 1)
+		val battlefield = Battlefield(BattlefieldBoundaries(2,1))
 
 		assertFailsWith(BattleWithNoSoldiers::class) {
 			Battle(battlefield, SoldiersBattlePositions(emptyList()))
@@ -20,7 +20,7 @@ class BattleTests {
 	@Test
 	fun if_soldier_position_out_of_battlefield_bounds_throw_exception() {
 
-		val battlefield = Battlefield(2, 1)
+		val battlefield = Battlefield(BattlefieldBoundaries(2,1))
 
 		assertFailsWith(InvalidSoldiersPosition::class) {
 			Battle(battlefield, SoldiersBattlePositions(listOf(
