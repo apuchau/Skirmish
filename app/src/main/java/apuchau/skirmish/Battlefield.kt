@@ -2,6 +2,12 @@ package apuchau.skirmish
 
 class Battlefield(val width: Int, val height: Int) {
 
+    val boundaries: BattlefieldBoundaries
+
+    init {
+        boundaries = BattlefieldBoundaries(width, height)
+    }
+
     override fun hashCode(): Int {
         return width + height
     }

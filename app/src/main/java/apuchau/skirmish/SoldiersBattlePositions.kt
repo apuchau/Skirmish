@@ -5,13 +5,13 @@ import apuchau.skirmish.exception.InvalidSoldiersPosition
 
 class SoldiersBattlePositions(positions : Collection<Pair<Soldier,BattlefieldPosition>>) {
 
-	var positions: List<Pair<Soldier,BattlefieldPosition>>
+	var soldiersAndPositions: List<Pair<Soldier,BattlefieldPosition>>
 
 	init {
 		checkNoDuplicateSoldiers(positions)
 		checkSoldiersDontOccupySameSpaces(positions)
 
-		this.positions = positions.toList()
+		this.soldiersAndPositions = positions.toList()
 	}
 
 	private fun checkNoDuplicateSoldiers(positions: Collection<Pair<Soldier, BattlefieldPosition>>) {
@@ -23,7 +23,7 @@ class SoldiersBattlePositions(positions : Collection<Pair<Soldier,BattlefieldPos
 				.count()
 
 		if (positions.size != numDifferentSoldiers) {
-			throw DuplicatedSoldier("There are duplicated positions in the battle")
+			throw DuplicatedSoldier("There are duplicated soldiersAndPositions in the battle")
 		}
 	}
 
@@ -41,22 +41,21 @@ class SoldiersBattlePositions(positions : Collection<Pair<Soldier,BattlefieldPos
 
 	}
 
-	fun count(): Int {
-		return positions.count()
-	}
+	fun count(): Int = soldiersAndPositions.count()
 
-	override fun toString(): String {
-		return positions.toString()
-	}
+	override fun toString(): String = soldiersAndPositions.toString()
 
-	override fun hashCode(): Int {
-		return positions.hashCode()
-	}
+	override fun hashCode(): Int = soldiersAndPositions.hashCode()
 
-	override fun equals(other: Any?): Boolean {
-		return (other != null)
+	override fun equals(other: Any?): Boolean =
+		(other != null)
 			&& (other is SoldiersBattlePositions)
-			&& (positions == other.positions)
-	}
+			&& (soldiersAndPositions == other.soldiersAndPositions)
+
+
+	fun areAllWithinBounds(battlefieldBoundaries: BattlefieldBoundaries) =
+		soldiersAndPositions
+			.map{it.second}
+			.all{it.isWithinBounds(battlefieldBoundaries)}
 
 }

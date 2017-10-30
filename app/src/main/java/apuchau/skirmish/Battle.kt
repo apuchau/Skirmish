@@ -1,27 +1,33 @@
 package apuchau.skirmish
 
 import apuchau.skirmish.exception.BattleWithNoSoldiers
-import apuchau.skirmish.exception.DuplicatedSoldier
 import apuchau.skirmish.exception.InvalidSoldiersPosition
 
 class Battle(val battlefield: Battlefield, soldiersPositions: SoldiersBattlePositions) {
 
-    private val soldiersPositions: SoldiersBattlePositions
+	private val soldiersPositions: SoldiersBattlePositions
 
-    init {
-		 checkEnoughSoldiersForBattle(soldiersPositions)
+	init {
+		checkEnoughSoldiersForBattle(soldiersPositions)
+		checkPositionsAreInBattlefieldBounds(battlefield, soldiersPositions)
+		this.soldiersPositions = soldiersPositions
+	}
 
-		 this.soldiersPositions = soldiersPositions
-    }
-
-	private fun checkEnoughSoldiersForBattle(soldiersPositions: SoldiersBattlePositions) {
-		if (soldiersPositions.count() < 2) {
-			throw BattleWithNoSoldiers("Battle can't happen without soldiers")
+	private fun checkPositionsAreInBattlefieldBounds(battlefield: Battlefield,
+																	 soldiersPositions: SoldiersBattlePositions) {
+		if (!soldiersPositions.areAllWithinBounds(battlefield.boundaries)) {
+			throw InvalidSoldiersPosition("Some soldiersAndPositions are out of the battlefield bounds")
 		}
 	}
 
-    fun status(): SoldiersBattlePositions {
-        return soldiersPositions
-    }
+	private fun checkEnoughSoldiersForBattle(soldiersPositions: SoldiersBattlePositions) {
+		if (soldiersPositions.count() < 2) {
+			throw BattleWithNoSoldiers("You need at least two soldiers to start a battle")
+		}
+	}
+
+	fun status(): SoldiersBattlePositions {
+		return soldiersPositions
+	}
 
 }
