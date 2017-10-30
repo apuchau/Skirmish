@@ -4,52 +4,24 @@ import apuchau.skirmish.exception.BattleWithNoSoldiers
 import apuchau.skirmish.exception.DuplicatedSoldier
 import apuchau.skirmish.exception.InvalidSoldiersPosition
 
-class Battle(val battlefield: Battlefield, soldiersPositions: Collection<Pair<Soldier, BattlefieldPosition>>) {
+class Battle(val battlefield: Battlefield, soldiersPositions: SoldiersBattlePositions) {
 
-    private val soldiersPositions: MutableList<Pair<Soldier,BattlefieldPosition>>
+    private val soldiersPositions: SoldiersBattlePositions
 
     init {
-		 checkEnoughSoldiersForBattle(soldiersPositions);
-		 checkSoldiersDontOccupySameSpaces(soldiersPositions);
-		 checkNoDuplicateSoldiers(soldiersPositions);
-		 this.soldiersPositions = soldiersPositions.toMutableList()
+		 checkEnoughSoldiersForBattle(soldiersPositions)
+
+		 this.soldiersPositions = soldiersPositions
     }
 
-	private fun checkEnoughSoldiersForBattle(soldiers: Collection<Pair<Soldier, BattlefieldPosition>>) {
-		if (soldiers.isEmpty()) {
-			throw BattleWithNoSoldiers("Battle can't happen without soldiersPositions")
+	private fun checkEnoughSoldiersForBattle(soldiersPositions: SoldiersBattlePositions) {
+		if (soldiersPositions.count() < 2) {
+			throw BattleWithNoSoldiers("Battle can't happen without soldiers")
 		}
 	}
 
-	private fun checkNoDuplicateSoldiers(soldiers: Collection<Pair<Soldier, BattlefieldPosition>>) {
-
-		var numDifferentSoldiers =
-			soldiers
-				.map{it.first}
-				.distinct()
-				.count();
-
-		if (soldiers.size != numDifferentSoldiers) {
-			throw DuplicatedSoldier("There are duplicated soldiersPositions in the battle")
-		}
-	}
-
-	private fun checkSoldiersDontOccupySameSpaces(soldiers: Collection<Pair<Soldier, BattlefieldPosition>>) {
-
-		 val numDifferentPositions =
-			 soldiers
-				 .map{it.second}
-				 .distinct()
-				 .count()
-
-		 if (soldiers.size != numDifferentPositions) {
-			 throw InvalidSoldiersPosition("Some soldiersPositions occupy the same battlefield spot");
-		 }
-
-    }
-
-    fun status(): Collection<Pair<Soldier,BattlefieldPosition>> {
-        return soldiersPositions.toList()
+    fun status(): SoldiersBattlePositions {
+        return soldiersPositions
     }
 
 }
