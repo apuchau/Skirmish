@@ -1,12 +1,11 @@
 package apuchau.skirmish
 
-import apuchau.skirmish.exception.NotEnoughArmies
 import apuchau.skirmish.exception.NotEnoughSoldiers
 
 class Army(armyId: String, soldiers: Set<Soldier>) {
 
 	private var armyId: String
-	private var soldiers: Set<Soldier>
+	var soldiers: Set<Soldier>
 
 	init {
 		checkArmyHasSoldiers(soldiers)
@@ -20,12 +19,13 @@ class Army(armyId: String, soldiers: Set<Soldier>) {
 		}
 	}
 
+	fun containsSoldier(soldier: Soldier): Boolean = soldiers.contains(soldier)
+
 	override fun hashCode(): Int = armyId.hashCode()
 
 	override fun equals(other: Any?): Boolean =
 			other != null
 		&& other is Army
 		&& armyId.equals(other.armyId)
-
 	override fun toString(): String = "Army '$armyId': Soldiers: $soldiers"
 }

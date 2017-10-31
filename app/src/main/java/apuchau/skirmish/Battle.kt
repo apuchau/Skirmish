@@ -2,6 +2,7 @@ package apuchau.skirmish
 
 import apuchau.skirmish.exception.NotEnoughSoldiers
 import apuchau.skirmish.exception.InvalidSoldiersPosition
+import apuchau.skirmish.exception.SoldierNotInArmy
 
 class Battle(private val battlefield: Battlefield,
 				 private val armies: Set<Army>,
@@ -9,7 +10,8 @@ class Battle(private val battlefield: Battlefield,
 
 	init {
 		checkEnoughArmies(armies)
-		checkEnoughSoldiersForBattle(soldiersPositions)
+		checkAllArmiesHaveRepresentationInBattlefield(armies, soldiersPositions)
+		checkSoldiersInBattlefieldBelongsToArmies(armies, soldiersPositions)
 		checkPositionsAreInBattlefieldBounds(battlefield, soldiersPositions)
 	}
 
@@ -19,16 +21,30 @@ class Battle(private val battlefield: Battlefield,
 		}
 	}
 
+	private fun checkAllArmiesHaveRepresentationInBattlefield(
+		armies: Set<Army>,
+		soldiersPositions: SoldiersBattlePositions) {
+
+		if (armies.any{
+			it.soldiers.none{ soldiersPositions.containsSoldier(it) }
+		}) {
+			throw NotEnoughSoldiers("Not all armies are represented in the battlefield")
+		}
+	}
+
+	private fun checkSoldiersInBattlefieldBelongsToArmies(
+		armies: Set<Army>,
+		soldiersPositions: SoldiersBattlePositions) {
+
+		if (soldiersPositions.soldiers().any{ soldier -> armies.none{ it.containsSoldier(soldier) } }) {
+			throw SoldierNotInArmy()
+		}
+	}
+
 	private fun checkPositionsAreInBattlefieldBounds(battlefield: Battlefield,
 																	 soldiersPositions: SoldiersBattlePositions) {
 		if (!soldiersPositions.areAllWithinBounds(battlefield.boundaries)) {
 			throw InvalidSoldiersPosition("Some soldiersAndPositions are out of the battlefield bounds")
-		}
-	}
-
-	private fun checkEnoughSoldiersForBattle(soldiersPositions: SoldiersBattlePositions) {
-		if (soldiersPositions.count() < 2) {
-			throw NotEnoughSoldiers("You need at least two soldiers to start a battle")
 		}
 	}
 

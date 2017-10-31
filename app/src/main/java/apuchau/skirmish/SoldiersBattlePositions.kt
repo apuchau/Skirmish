@@ -5,7 +5,7 @@ import apuchau.skirmish.exception.InvalidSoldiersPosition
 
 class SoldiersBattlePositions(positions : Collection<Pair<Soldier,BattlefieldPosition>>) {
 
-	var soldiersAndPositions: List<Pair<Soldier,BattlefieldPosition>>
+	private var soldiersAndPositions: List<Pair<Soldier,BattlefieldPosition>>
 
 	init {
 		checkNoDuplicateSoldiers(positions)
@@ -38,10 +38,19 @@ class SoldiersBattlePositions(positions : Collection<Pair<Soldier,BattlefieldPos
 		if (positions.size != numDifferentPositions) {
 			throw InvalidSoldiersPosition("Some soldiers occupy the same battlefield spot")
 		}
-
 	}
 
-	fun count(): Int = soldiersAndPositions.count()
+	fun soldiers() : List<Soldier> = soldiersAndPositions.map{ it.first }
+
+	fun areAllWithinBounds(battlefieldBoundaries: BattlefieldBoundaries) =
+		soldiersAndPositions
+			.map{it.second}
+			.all{it.isWithinBounds(battlefieldBoundaries)}
+
+	fun containsSoldier(soldier : Soldier): Boolean =
+		soldiersAndPositions
+			.map { it.first }
+			.any { it == soldier }
 
 	override fun toString(): String = soldiersAndPositions.toString()
 
@@ -51,11 +60,5 @@ class SoldiersBattlePositions(positions : Collection<Pair<Soldier,BattlefieldPos
 		(other != null)
 			&& (other is SoldiersBattlePositions)
 			&& (soldiersAndPositions == other.soldiersAndPositions)
-
-
-	fun areAllWithinBounds(battlefieldBoundaries: BattlefieldBoundaries) =
-		soldiersAndPositions
-			.map{it.second}
-			.all{it.isWithinBounds(battlefieldBoundaries)}
 
 }
