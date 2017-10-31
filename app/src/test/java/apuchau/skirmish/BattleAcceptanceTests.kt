@@ -13,12 +13,18 @@ class BattleAcceptanceTests {
     fun a_skirmish() {
 
         val battlefield = Battlefield(BattlefieldBoundaries(2,1))
+
+        val armies = setOf(
+           Army("Arthur's army", setOf(KingArthur)),
+           Army("Mordred's army", setOf(Mordred))
+        )
+
         val soldiersPositions = SoldiersBattlePositions(listOf(
                 Pair(KingArthur, BattlefieldPosition(1,1)),
                 Pair(Mordred, BattlefieldPosition(2,1)))
         )
 
-        val battle = Battle(battlefield, soldiersPositions)
+        val battle = Battle(battlefield, armies, soldiersPositions)
 
         assertEquals(battle.status(), SoldiersBattlePositions(listOf(
                 Pair(KingArthur, BattlefieldPosition(1,1)),
