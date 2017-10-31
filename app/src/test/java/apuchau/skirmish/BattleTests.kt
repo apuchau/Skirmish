@@ -1,6 +1,6 @@
 package apuchau.skirmish
 
-import apuchau.skirmish.exception.BattleWithNoSoldiers
+import apuchau.skirmish.exception.NotEnoughSoldiersToBattle
 import apuchau.skirmish.exception.InvalidSoldiersPosition
 import org.junit.Test
 import kotlin.test.assertFailsWith
@@ -8,12 +8,14 @@ import kotlin.test.assertFailsWith
 class BattleTests {
 
 	@Test
-	fun if_no_soldiers_initially_in_battle_throw_exception() {
+	fun you_need_at_least_two_soldiers_to_fight_a_battle() {
 
 		val battlefield = Battlefield(BattlefieldBoundaries(2,1))
 
-		assertFailsWith(BattleWithNoSoldiers::class) {
-			Battle(battlefield, SoldiersBattlePositions(emptyList()))
+		assertFailsWith(NotEnoughSoldiersToBattle::class) {
+			Battle(battlefield, SoldiersBattlePositions(listOf(
+				Pair(Soldier(SoldierId("SoldierA")), BattlefieldPosition(1,1))
+			)))
 		}
 	}
 
@@ -29,6 +31,4 @@ class BattleTests {
 			)))
 		}
 	}
-
-
 }

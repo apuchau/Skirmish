@@ -1,9 +1,9 @@
 package apuchau.skirmish
 
-import apuchau.skirmish.exception.BattleWithNoSoldiers
+import apuchau.skirmish.exception.NotEnoughSoldiersToBattle
 import apuchau.skirmish.exception.InvalidSoldiersPosition
 
-class Battle(val battlefield: Battlefield, soldiersPositions: SoldiersBattlePositions) {
+class Battle(private val battlefield: Battlefield, soldiersPositions: SoldiersBattlePositions) {
 
 	private val soldiersPositions: SoldiersBattlePositions
 
@@ -22,7 +22,7 @@ class Battle(val battlefield: Battlefield, soldiersPositions: SoldiersBattlePosi
 
 	private fun checkEnoughSoldiersForBattle(soldiersPositions: SoldiersBattlePositions) {
 		if (soldiersPositions.count() < 2) {
-			throw BattleWithNoSoldiers("You need at least two soldiers to start a battle")
+			throw NotEnoughSoldiersToBattle("You need at least two soldiers to start a battle")
 		}
 	}
 
@@ -30,4 +30,7 @@ class Battle(val battlefield: Battlefield, soldiersPositions: SoldiersBattlePosi
 		return soldiersPositions
 	}
 
+	override fun toString(): String {
+		return "Battle. Battlefield: $battlefield, Soldiers: $soldiersPositions"
+	}
 }
