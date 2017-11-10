@@ -1,0 +1,27 @@
+
+private fun assertBitmaps(expectedBitmap: Bitmap, bitmap: Bitmap) {
+
+	assertEquals("width", expectedBitmap.width, bitmap.width)
+	assertEquals("height", expectedBitmap.height, bitmap.height)
+
+	for (x in 0 until expectedBitmap.width) {
+		for (y in 0 until expectedBitmap.height) {
+			val expectedColor = expectedBitmap.getPixel(x, y)
+			val color = bitmap.getPixel(x, y)
+
+			assertEquals("Pixel colour at ($x,$y)", expectedColor, color)
+		}
+	}
+}
+
+private fun getViewContent(view: View) : Bitmap {
+	val bitmap = Bitmap.createBitmap(
+		view.getLayoutParams().width,
+		view.getLayoutParams().height,
+		Bitmap.Config.ARGB_8888)
+
+	val c = Canvas(bitmap)
+	view.layout(view.getLeft(), view.getTop(), view.getRight(), view.getBottom())
+	view.draw(c)
+	return bitmap
+}
