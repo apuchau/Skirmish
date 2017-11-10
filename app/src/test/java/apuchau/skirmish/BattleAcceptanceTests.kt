@@ -41,21 +41,27 @@ class BattleAcceptanceTests {
 			 Pair(Mordred, BattlefieldPosition(2, 1))
 		 ))
 
-		 val soldiersStatuses = mapOf(
-			 Pair( arthursArmy, mapOf(Pair(KingArthur, SoldierStatus.DOING_NOTHING))),
-			 Pair( mordredsArmy, mapOf(Pair(Mordred, SoldierStatus.DOING_NOTHING)))
-		 )
-
-		 val expectedSnapshot = BattleSnapshot(
+		 var expectedSnapshot = BattleSnapshot(
 			 battlefield,
 			 startingBattlePositions,
-			 soldiersStatuses)
+			 mapOf(
+				 Pair( arthursArmy, mapOf(Pair(KingArthur, SoldierStatus.DOING_NOTHING))),
+				 Pair( mordredsArmy, mapOf(Pair(Mordred, SoldierStatus.DOING_NOTHING)))
+			 ))
 
 		 assertEquals(battle.snapshot(), expectedSnapshot)
 
-		 // Nothing changes in the battle after a time cycle
+		 // If two soldiers of are next to each other, they fight
 
 		 battle.timeCycle()
+
+		 expectedSnapshot = BattleSnapshot(
+			 battlefield,
+			 startingBattlePositions,
+			 mapOf(
+				 Pair( arthursArmy, mapOf(Pair(KingArthur, SoldierStatus.FIGHTING))),
+				 Pair( mordredsArmy, mapOf(Pair(Mordred, SoldierStatus.FIGHTING)))
+			 ))
 
 		 assertEquals(battle.snapshot(), expectedSnapshot)
     }

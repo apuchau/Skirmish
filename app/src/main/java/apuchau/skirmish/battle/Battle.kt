@@ -73,5 +73,9 @@ class Battle(val battlefield: Battlefield,
 
 	fun timeCycle() {
 
+		this.soldiersStatuses = armies
+			.map { army -> Pair(army, army.soldiers.map{ soldier -> Pair(soldier, SoldierStatus.FIGHTING) }.toMap()) }
+			.toMap()
+
 	}
 }
