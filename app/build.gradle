@@ -1,7 +1,5 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -23,6 +21,7 @@ android {
     sourceSets {
         main.java.srcDirs += 'src/main/java'
         test.java.srcDirs += 'src/test/java'
+        androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
     buildToolsVersion '27.0.0'
     compileOptions {
