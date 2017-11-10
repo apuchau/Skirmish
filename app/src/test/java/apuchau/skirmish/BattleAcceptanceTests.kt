@@ -34,7 +34,7 @@ class BattleAcceptanceTests {
 			 Pair(Mordred, BattlefieldPosition(2,1))
 		 ))
 
-		 val battle = Battle(battlefield, armies, soldiersPositions)
+		 val battle = Battle.instance(battlefield, armies, soldiersPositions)
 
 		 val startingBattlePositions = SoldiersBattlePositions(listOf(
 			 Pair(KingArthur, BattlefieldPosition(1, 1)),

@@ -44,12 +44,12 @@ class SkirmishAppActivity : Activity() {
 			Pair(Mordred, BattlefieldPosition(2,1)))
 		)
 
-		battle = Battle(battlefield, armies, soldiersPositions)
+		battle = Battle.instance(battlefield, armies, soldiersPositions)
 	}
 
 	fun createBattleView() {
 
-		var rootView : View = getWindow().getDecorView().getRootView()
+		val rootView : View = getWindow().getDecorView().getRootView()
 
 		val layout = LinearLayout(this)
 		layout.layout(5, 5, 5, 5)
@@ -65,7 +65,7 @@ class SkirmishAppActivity : Activity() {
 
 	fun displayBattle() {
 
-		var battle = this.battle ?: return
+		val battle = this.battle ?: return
 		this.battleView?.displayBattleStatus((battle.battlefield))
 	}
 

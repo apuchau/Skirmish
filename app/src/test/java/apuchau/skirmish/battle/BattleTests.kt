@@ -24,7 +24,7 @@ class BattleTests {
 		)
 
 		assertFailsWith(NotEnoughSoldiers::class) {
-			Battle(battlefield, armies, SoldiersBattlePositions(listOf(
+			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
 				Pair(Soldier(SoldierId("SoldierA1")), BattlefieldPosition(1,1))
 			)))
 		}
@@ -41,7 +41,7 @@ class BattleTests {
 		)
 
 		assertFailsWith(SoldierNotInArmy::class) {
-			Battle(battlefield, armies, SoldiersBattlePositions(listOf(
+			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
 				Pair(Soldier(SoldierId("SoldierA1")), BattlefieldPosition(1,1)),
 				Pair(Soldier(SoldierId("SoldierB1")), BattlefieldPosition(2,1)),
 				Pair(Soldier(SoldierId("SoldierC1")), BattlefieldPosition(3,1))
@@ -60,13 +60,13 @@ class BattleTests {
 		)
 
 		assertFailsWith(NotEnoughSoldiers::class) {
-			Battle(battlefield, armies, SoldiersBattlePositions(listOf(
+			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
 				Pair(Soldier(SoldierId("SoldierA1")), BattlefieldPosition(1,1))
 			)))
 		}
 
 		assertFailsWith(NotEnoughSoldiers::class) {
-			Battle(battlefield, armies, SoldiersBattlePositions(listOf(
+			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
 				Pair(Soldier(SoldierId("SoldierB1")), BattlefieldPosition(1,1))
 			)))
 		}
@@ -83,7 +83,7 @@ class BattleTests {
 		)
 
 		assertFailsWith(InvalidSoldiersPosition::class) {
-			Battle(battlefield, armies, SoldiersBattlePositions(listOf(
+			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
 				Pair(Soldier(SoldierId("SoldierA1")), BattlefieldPosition(1,1)),
 				Pair(Soldier(SoldierId("SoldierB1")), BattlefieldPosition(3,1))
 			)))
@@ -101,7 +101,7 @@ class BattleTests {
 			Army("Army B", setOf(Soldier(SoldierId("SoldierB1"))))
 		)
 
-		Battle(battlefield, armies, SoldiersBattlePositions(listOf(
+		Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
 			Pair(Soldier(SoldierId("SoldierA1")), BattlefieldPosition(3,1)),
 			Pair(Soldier(SoldierId("SoldierB1")), BattlefieldPosition(1,5))
 		)))
