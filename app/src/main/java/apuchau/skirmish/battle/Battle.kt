@@ -1,10 +1,13 @@
-package apuchau.skirmish
+package apuchau.skirmish.battle
 
+import apuchau.skirmish.Army
+import apuchau.skirmish.Battlefield
+import apuchau.skirmish.SoldiersBattlePositions
 import apuchau.skirmish.exception.NotEnoughSoldiers
 import apuchau.skirmish.exception.InvalidSoldiersPosition
 import apuchau.skirmish.exception.SoldierNotInArmy
 
-class Battle(private val battlefield: Battlefield,
+class Battle(val battlefield: Battlefield,
 				 private val armies: Set<Army>,
 				 private val soldiersPositions: SoldiersBattlePositions) {
 

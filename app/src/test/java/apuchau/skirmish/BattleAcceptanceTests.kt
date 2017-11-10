@@ -1,5 +1,6 @@
 package apuchau.skirmish
 
+import apuchau.skirmish.battle.Battle
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 

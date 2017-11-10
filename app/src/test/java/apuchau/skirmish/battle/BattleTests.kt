@@ -1,5 +1,6 @@
-package apuchau.skirmish
+package apuchau.skirmish.battle
 
+import apuchau.skirmish.*
 import apuchau.skirmish.exception.NotEnoughSoldiers
 import apuchau.skirmish.exception.InvalidSoldiersPosition
 import apuchau.skirmish.exception.SoldierNotInArmy
@@ -86,7 +87,7 @@ class BattleTests {
 
 
 	@Test
-	fun soldier_can_be_positioned_in_battlefield_border__no_error_thrown() {
+	fun soldier_can_be_positioned_in_battlefield_edge__no_error_thrown() {
 
 		val battlefield = Battlefield(BattlefieldBoundaries(3,5))
 
@@ -100,4 +101,5 @@ class BattleTests {
 			Pair(Soldier(SoldierId("SoldierB1")), BattlefieldPosition(1,5))
 		)))
 	}
+
 }
