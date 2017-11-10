@@ -1,11 +1,11 @@
 package apuchau.skirmish.battle
 
-import apuchau.skirmish.*
+import apuchau.skirmish.army.Army
 import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.battlefield.BattlefieldBoundaries
 import apuchau.skirmish.battlefield.BattlefieldPosition
-import apuchau.skirmish.exception.NotEnoughSoldiers
 import apuchau.skirmish.exception.InvalidSoldiersPosition
+import apuchau.skirmish.exception.NotEnoughSoldiers
 import apuchau.skirmish.exception.SoldierNotInArmy
 import apuchau.skirmish.soldier.Soldier
 import apuchau.skirmish.soldier.SoldierId

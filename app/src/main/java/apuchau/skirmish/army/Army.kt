@@ -1,4 +1,4 @@
-package apuchau.skirmish
+package apuchau.skirmish.army
 
 import apuchau.skirmish.exception.NotEnoughSoldiers
 import apuchau.skirmish.soldier.Soldier

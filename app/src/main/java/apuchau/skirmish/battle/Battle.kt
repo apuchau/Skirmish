@@ -1,20 +1,24 @@
 package apuchau.skirmish.battle
 
-import apuchau.skirmish.Army
+import apuchau.skirmish.army.Army
 import apuchau.skirmish.battlefield.Battlefield
-import apuchau.skirmish.exception.NotEnoughSoldiers
 import apuchau.skirmish.exception.InvalidSoldiersPosition
+import apuchau.skirmish.exception.NotEnoughSoldiers
 import apuchau.skirmish.exception.SoldierNotInArmy
+import apuchau.skirmish.soldier.Soldier
 
 class Battle(val battlefield: Battlefield,
 				 private val armies: Set<Army>,
 				 private val soldiersPositions: SoldiersBattlePositions) {
+
+	private var soldiersStatuses : Map<Army, Map<Soldier, SoldierStatus>> = emptyMap()
 
 	init {
 		checkEnoughArmies(armies)
 		checkAllArmiesHaveRepresentationInBattlefield(armies, soldiersPositions)
 		checkSoldiersInBattlefieldBelongsToArmies(armies, soldiersPositions)
 		checkPositionsAreInBattlefieldBounds(battlefield, soldiersPositions)
+		initSoldiersStatuses(armies)
 	}
 
 	private fun checkEnoughArmies(armies: Set<Army>) {
@@ -22,6 +26,7 @@ class Battle(val battlefield: Battlefield,
 			throw NotEnoughSoldiers("You need at least two armies to battle")
 		}
 	}
+
 
 	private fun checkAllArmiesHaveRepresentationInBattlefield(
 		armies: Set<Army>,
@@ -50,11 +55,23 @@ class Battle(val battlefield: Battlefield,
 		}
 	}
 
+	private fun initSoldiersStatuses(armies: Set<Army>) {
+
+		this.soldiersStatuses = armies
+			.map { army -> Pair(army, army.soldiers.map{ soldier -> Pair(soldier, SoldierStatus.DOING_NOTHING) }.toMap()) }
+			.toMap()
+
+	}
+
 	fun snapshot(): BattleSnapshot {
-		return BattleSnapshot(battlefield, soldiersPositions)
+		return BattleSnapshot(battlefield, soldiersPositions, soldiersStatuses)
 	}
 
 	override fun toString(): String {
 		return "Battle. Battlefield: $battlefield, Armies: $armies, Positions: $soldiersPositions"
+	}
+
+	fun timeCycle() {
+
 	}
 }

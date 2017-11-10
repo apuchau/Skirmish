@@ -4,9 +4,9 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import apuchau.skirmish.*
 import android.widget.LinearLayout
 import apuchau.skirmish.app.text.BattleTextView
+import apuchau.skirmish.army.Army
 import apuchau.skirmish.battle.Battle
 import apuchau.skirmish.battle.SoldiersBattlePositions
 import apuchau.skirmish.battlefield.Battlefield
