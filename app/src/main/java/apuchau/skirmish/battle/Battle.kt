@@ -50,8 +50,8 @@ class Battle(val battlefield: Battlefield,
 		}
 	}
 
-	fun status(): SoldiersBattlePositions {
-		return soldiersPositions
+	fun snapshot(): BattleSnapshot {
+		return BattleSnapshot(battlefield, soldiersPositions)
 	}
 
 	override fun toString(): String {

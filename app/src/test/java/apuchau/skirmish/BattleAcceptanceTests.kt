@@ -1,6 +1,7 @@
 package apuchau.skirmish
 
 import apuchau.skirmish.battle.Battle
+import apuchau.skirmish.battle.BattleSnapshot
 import apuchau.skirmish.battle.SoldiersBattlePositions
 import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.battlefield.BattlefieldBoundaries
@@ -19,23 +20,26 @@ class BattleAcceptanceTests {
 
     fun a_skirmish() {
 
-        val battlefield = Battlefield(BattlefieldBoundaries(2,1))
+		 val battlefield = Battlefield(BattlefieldBoundaries(2,1))
 
-        val armies = setOf(
-           Army("Arthur's army", setOf(KingArthur)),
-           Army("Mordred's army", setOf(Mordred))
-        )
+		val armies = setOf(
+		  Army("Arthur's army", setOf(KingArthur)),
+		  Army("Mordred's army", setOf(Mordred))
+		)
 
-        val soldiersPositions = SoldiersBattlePositions(listOf(
-                Pair(KingArthur, BattlefieldPosition(1,1)),
-                Pair(Mordred, BattlefieldPosition(2,1)))
-        )
+		val soldiersPositions = SoldiersBattlePositions(listOf(
+			Pair(KingArthur, BattlefieldPosition(1,1)),
+			Pair(Mordred, BattlefieldPosition(2,1))
+		))
 
-        val battle = Battle(battlefield, armies, soldiersPositions)
+		 val battle = Battle(battlefield, armies, soldiersPositions)
 
-        assertEquals(battle.status(), SoldiersBattlePositions(listOf(
-                Pair(KingArthur, BattlefieldPosition(1,1)),
-                Pair(Mordred, BattlefieldPosition(2,1)))))
+		 val expectedSnapshot = BattleSnapshot(battlefield, SoldiersBattlePositions(listOf(
+			 Pair(KingArthur, BattlefieldPosition(1,1)),
+			 Pair(Mordred, BattlefieldPosition(2,1))
+		 )))
+
+		 assertEquals(battle.snapshot(), expectedSnapshot)
     }
 
 
