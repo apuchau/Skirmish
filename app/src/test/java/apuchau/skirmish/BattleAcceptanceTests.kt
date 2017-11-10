@@ -1,6 +1,12 @@
 package apuchau.skirmish
 
 import apuchau.skirmish.battle.Battle
+import apuchau.skirmish.battle.SoldiersBattlePositions
+import apuchau.skirmish.battlefield.Battlefield
+import apuchau.skirmish.battlefield.BattlefieldBoundaries
+import apuchau.skirmish.battlefield.BattlefieldPosition
+import apuchau.skirmish.soldier.Soldier
+import apuchau.skirmish.soldier.SoldierId
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 

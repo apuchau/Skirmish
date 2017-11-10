@@ -1,4 +1,4 @@
-package apuchau.skirmish
+package apuchau.skirmish.soldier
 
 class Soldier(val soldierId: SoldierId) {
 

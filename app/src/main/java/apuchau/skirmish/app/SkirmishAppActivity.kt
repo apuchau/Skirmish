@@ -8,6 +8,12 @@ import apuchau.skirmish.*
 import android.widget.LinearLayout
 import apuchau.skirmish.app.text.BattleTextView
 import apuchau.skirmish.battle.Battle
+import apuchau.skirmish.battle.SoldiersBattlePositions
+import apuchau.skirmish.battlefield.Battlefield
+import apuchau.skirmish.battlefield.BattlefieldBoundaries
+import apuchau.skirmish.battlefield.BattlefieldPosition
+import apuchau.skirmish.soldier.Soldier
+import apuchau.skirmish.soldier.SoldierId
 
 
 class SkirmishAppActivity : Activity() {

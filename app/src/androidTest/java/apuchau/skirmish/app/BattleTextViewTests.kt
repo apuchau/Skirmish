@@ -1,13 +1,13 @@
 package apuchau.skirmish.app
 
-import apuchau.skirmish.Battlefield
-import apuchau.skirmish.BattlefieldBoundaries
 import apuchau.skirmish.app.text.BattleTextView
 import org.junit.Test
 import android.widget.TextView
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import android.view.ViewGroup
+import apuchau.skirmish.battlefield.Battlefield
+import apuchau.skirmish.battlefield.BattlefieldBoundaries
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.runner.RunWith

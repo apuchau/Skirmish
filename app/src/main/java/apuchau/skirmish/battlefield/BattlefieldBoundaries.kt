@@ -1,4 +1,4 @@
-package apuchau.skirmish
+package apuchau.skirmish.battlefield
 
 import apuchau.skirmish.exception.InvalidBoundaryValue
 

@@ -1,11 +1,14 @@
-package apuchau.skirmish
+package apuchau.skirmish.battle
 
+import apuchau.skirmish.battlefield.BattlefieldBoundaries
+import apuchau.skirmish.battlefield.BattlefieldPosition
 import apuchau.skirmish.exception.DuplicatedSoldier
 import apuchau.skirmish.exception.InvalidSoldiersPosition
+import apuchau.skirmish.soldier.Soldier
 
 class SoldiersBattlePositions(positions : Collection<Pair<Soldier,BattlefieldPosition>>) {
 
-	private var soldiersAndPositions: List<Pair<Soldier,BattlefieldPosition>>
+	private var soldiersAndPositions: List<Pair<Soldier, BattlefieldPosition>>
 
 	init {
 		checkNoDuplicateSoldiers(positions)

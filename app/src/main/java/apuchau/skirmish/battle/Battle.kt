@@ -1,8 +1,7 @@
 package apuchau.skirmish.battle
 
 import apuchau.skirmish.Army
-import apuchau.skirmish.Battlefield
-import apuchau.skirmish.SoldiersBattlePositions
+import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.exception.NotEnoughSoldiers
 import apuchau.skirmish.exception.InvalidSoldiersPosition
 import apuchau.skirmish.exception.SoldierNotInArmy

@@ -4,8 +4,8 @@ import android.content.Context
 import android.graphics.Typeface
 import android.util.TypedValue
 import android.widget.TextView
-import apuchau.skirmish.Battlefield
 import apuchau.skirmish.app.BattleView
+import apuchau.skirmish.battlefield.Battlefield
 
 class BattleTextView(context: Context?) : TextView(context), BattleView {
 

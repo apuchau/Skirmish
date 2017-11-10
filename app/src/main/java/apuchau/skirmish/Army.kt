@@ -1,6 +1,7 @@
 package apuchau.skirmish
 
 import apuchau.skirmish.exception.NotEnoughSoldiers
+import apuchau.skirmish.soldier.Soldier
 
 class Army(armyId: String, soldiers: Set<Soldier>) {
 

@@ -1,7 +1,11 @@
 package apuchau.skirmish
 
+import apuchau.skirmish.battle.SoldiersBattlePositions
+import apuchau.skirmish.battlefield.BattlefieldPosition
 import apuchau.skirmish.exception.DuplicatedSoldier
 import apuchau.skirmish.exception.InvalidSoldiersPosition
+import apuchau.skirmish.soldier.Soldier
+import apuchau.skirmish.soldier.SoldierId
 import org.junit.Test
 import kotlin.test.assertFailsWith
 
