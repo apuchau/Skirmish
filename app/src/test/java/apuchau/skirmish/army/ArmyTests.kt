@@ -1,6 +1,5 @@
-package apuchau.skirmish
+package apuchau.skirmish.army
 
-import apuchau.skirmish.army.Army
 import apuchau.skirmish.exception.NotEnoughSoldiers
 import org.junit.Test
 import kotlin.test.assertFailsWith

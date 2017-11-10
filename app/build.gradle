@@ -33,6 +33,7 @@ android {
 dependencies {
     testImplementation 'junit:junit:4.12'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "com.natpryce:result4k:1.4.1"
     testCompile 'com.willowtreeapps.assertk:assertk:0.9'
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
     androidTestImplementation 'com.android.support.test:runner:1.0.1'

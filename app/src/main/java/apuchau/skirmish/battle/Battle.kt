@@ -58,7 +58,7 @@ class Battle private constructor(val battlefield: Battlefield,
 		private fun checkPositionsAreInBattlefieldBounds(battlefield: Battlefield,
 																		 soldiersPositions: SoldiersBattlePositions) {
 			if (!soldiersPositions.areAllWithinBounds(battlefield.boundaries)) {
-				throw InvalidSoldiersPosition("Some soldiersAndPositions are out of the battlefield bounds")
+				throw InvalidSoldiersPosition("Some positions are out of the battlefield bounds")
 			}
 		}
 	}

@@ -3,7 +3,7 @@ package apuchau.skirmish.battle
 import apuchau.skirmish.army.Army
 import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.battlefield.BattlefieldBoundaries
-import apuchau.skirmish.battlefield.BattlefieldPosition
+import apuchau.skirmish.battlefield.battlefieldPosition
 import apuchau.skirmish.exception.InvalidSoldiersPosition
 import apuchau.skirmish.exception.NotEnoughSoldiers
 import apuchau.skirmish.exception.SoldierNotInArmy
@@ -25,7 +25,7 @@ class BattleTests {
 
 		assertFailsWith(NotEnoughSoldiers::class) {
 			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
-				Pair(Soldier(SoldierId("SoldierA1")), BattlefieldPosition(1,1))
+				Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(1,1))
 			)))
 		}
 	}
@@ -42,9 +42,9 @@ class BattleTests {
 
 		assertFailsWith(SoldierNotInArmy::class) {
 			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
-				Pair(Soldier(SoldierId("SoldierA1")), BattlefieldPosition(1,1)),
-				Pair(Soldier(SoldierId("SoldierB1")), BattlefieldPosition(2,1)),
-				Pair(Soldier(SoldierId("SoldierC1")), BattlefieldPosition(3,1))
+				Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(1,1)),
+				Pair(Soldier(SoldierId("SoldierB1")), battlefieldPosition(2,1)),
+				Pair(Soldier(SoldierId("SoldierC1")), battlefieldPosition(3,1))
 			)))
 		}
 	}
@@ -61,13 +61,13 @@ class BattleTests {
 
 		assertFailsWith(NotEnoughSoldiers::class) {
 			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
-				Pair(Soldier(SoldierId("SoldierA1")), BattlefieldPosition(1,1))
+				Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(1,1))
 			)))
 		}
 
 		assertFailsWith(NotEnoughSoldiers::class) {
 			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
-				Pair(Soldier(SoldierId("SoldierB1")), BattlefieldPosition(1,1))
+				Pair(Soldier(SoldierId("SoldierB1")), battlefieldPosition(1,1))
 			)))
 		}
 	}
@@ -84,8 +84,8 @@ class BattleTests {
 
 		assertFailsWith(InvalidSoldiersPosition::class) {
 			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
-				Pair(Soldier(SoldierId("SoldierA1")), BattlefieldPosition(1,1)),
-				Pair(Soldier(SoldierId("SoldierB1")), BattlefieldPosition(3,1))
+				Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(1,1)),
+				Pair(Soldier(SoldierId("SoldierB1")), battlefieldPosition(3,1))
 			)))
 		}
 	}
@@ -102,8 +102,8 @@ class BattleTests {
 		)
 
 		Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
-			Pair(Soldier(SoldierId("SoldierA1")), BattlefieldPosition(3,1)),
-			Pair(Soldier(SoldierId("SoldierB1")), BattlefieldPosition(1,5))
+			Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(3,1)),
+			Pair(Soldier(SoldierId("SoldierB1")), battlefieldPosition(1,5))
 		)))
 	}
 

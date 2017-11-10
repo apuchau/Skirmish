@@ -7,7 +7,7 @@ import apuchau.skirmish.battle.SoldierStatus
 import apuchau.skirmish.battle.SoldiersBattlePositions
 import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.battlefield.BattlefieldBoundaries
-import apuchau.skirmish.battlefield.BattlefieldPosition
+import apuchau.skirmish.battlefield.battlefieldPosition
 import apuchau.skirmish.soldier.Soldier
 import apuchau.skirmish.soldier.SoldierId
 import junit.framework.TestCase.assertEquals
@@ -30,15 +30,15 @@ class BattleAcceptanceTests {
 		 val armies = setOf(arthursArmy, mordredsArmy)
 
 		 val soldiersPositions = SoldiersBattlePositions(listOf(
-			 Pair(KingArthur, BattlefieldPosition(1,1)),
-			 Pair(Mordred, BattlefieldPosition(2,1))
+			 Pair(KingArthur, battlefieldPosition(1,1)),
+			 Pair(Mordred, battlefieldPosition(2,1))
 		 ))
 
 		 val battle = Battle.instance(battlefield, armies, soldiersPositions)
 
 		 val startingBattlePositions = SoldiersBattlePositions(listOf(
-			 Pair(KingArthur, BattlefieldPosition(1, 1)),
-			 Pair(Mordred, BattlefieldPosition(2, 1))
+			 Pair(KingArthur, battlefieldPosition(1, 1)),
+			 Pair(Mordred, battlefieldPosition(2, 1))
 		 ))
 
 		 var expectedSnapshot = BattleSnapshot(

@@ -2,45 +2,62 @@ package apuchau.skirmish.battle
 
 import apuchau.skirmish.battlefield.BattlefieldBoundaries
 import apuchau.skirmish.battlefield.BattlefieldPosition
-import apuchau.skirmish.exception.DuplicatedSoldier
-import apuchau.skirmish.exception.InvalidSoldiersPosition
 import apuchau.skirmish.soldier.Soldier
+import com.natpryce.*
 
-class SoldiersBattlePositions(positions : Collection<Pair<Soldier,BattlefieldPosition>>) {
+class SoldiersBattlePositions internal constructor(
+	positions : Collection<Pair<Soldier,BattlefieldPosition>>) {
 
 	private var soldiersAndPositions: List<Pair<Soldier, BattlefieldPosition>>
 
+	companion object Factory {
+
+		fun create(
+			positions : Collection<Pair<Soldier,BattlefieldPosition>>)
+			: Result<SoldiersBattlePositions, String> {
+
+			return checkNoDuplicateSoldiers(positions)
+				.flatMap { checkSoldiersDontOccupySameSpaces(positions) }
+				.map { SoldiersBattlePositions(positions) }
+		}
+
+		private fun checkNoDuplicateSoldiers(
+			positions: Collection<Pair<Soldier, BattlefieldPosition>>)
+			: Result<Unit, String> {
+
+			val numDifferentSoldiers =
+				positions
+					.map{it.first}
+					.distinct()
+					.count()
+
+			return check(
+				positions.size == numDifferentSoldiers,
+				"There are duplicated soldiers in the battle")
+		}
+
+		private fun checkSoldiersDontOccupySameSpaces(
+			positions: Collection<Pair<Soldier, BattlefieldPosition>>)
+			: Result<Unit,String> {
+
+			val numDifferentPositions =
+				positions
+					.map{it.second}
+					.distinct()
+					.count()
+
+			return check(
+				positions.size == numDifferentPositions,
+				"Some soldiers occupy the same battlefield spot")
+		}
+
+		private fun check(boolean: Boolean, errorMsg: String) : Result<Unit,String> {
+			return if (boolean) Ok(Unit) else Err(errorMsg)
+		}
+	}
+
 	init {
-		checkNoDuplicateSoldiers(positions)
-		checkSoldiersDontOccupySameSpaces(positions)
-
 		this.soldiersAndPositions = positions.toList()
-	}
-
-	private fun checkNoDuplicateSoldiers(positions: Collection<Pair<Soldier, BattlefieldPosition>>) {
-
-		val numDifferentSoldiers =
-			positions
-				.map{it.first}
-				.distinct()
-				.count()
-
-		if (positions.size != numDifferentSoldiers) {
-			throw DuplicatedSoldier("There are duplicated soldiersAndPositions in the battle")
-		}
-	}
-
-	private fun checkSoldiersDontOccupySameSpaces(positions: Collection<Pair<Soldier, BattlefieldPosition>>) {
-
-		val numDifferentPositions =
-			positions
-				.map{it.second}
-				.distinct()
-				.count()
-
-		if (positions.size != numDifferentPositions) {
-			throw InvalidSoldiersPosition("Some soldiers occupy the same battlefield spot")
-		}
 	}
 
 	fun soldiers() : List<Soldier> = soldiersAndPositions.map{ it.first }

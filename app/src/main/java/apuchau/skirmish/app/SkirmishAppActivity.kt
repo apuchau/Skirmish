@@ -14,6 +14,7 @@ import apuchau.skirmish.battlefield.BattlefieldBoundaries
 import apuchau.skirmish.battlefield.BattlefieldPosition
 import apuchau.skirmish.soldier.Soldier
 import apuchau.skirmish.soldier.SoldierId
+import com.natpryce.onError
 
 
 class SkirmishAppActivity : Activity() {
@@ -40,8 +41,8 @@ class SkirmishAppActivity : Activity() {
 		)
 
 		val soldiersPositions = SoldiersBattlePositions(listOf(
-			Pair(KingArthur, BattlefieldPosition(1,1)),
-			Pair(Mordred, BattlefieldPosition(2,1)))
+			Pair(KingArthur, battlefieldPosition(1,1)),
+			Pair(Mordred, battlefieldPosition(2,1)))
 		)
 
 		battle = Battle.instance(battlefield, armies, soldiersPositions)
@@ -68,5 +69,8 @@ class SkirmishAppActivity : Activity() {
 		val battle = this.battle ?: return
 		this.battleView?.displayBattleStatus((battle.battlefield))
 	}
+
+	fun battlefieldPosition(x: Int, y: Int) =
+		BattlefieldPosition.create(x,y).onError { throw Exception("Unexpected error preparing data for app") }
 
 }
