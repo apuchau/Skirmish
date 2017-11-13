@@ -10,6 +10,7 @@ import apuchau.skirmish.battlefield.BattlefieldBoundaries
 import apuchau.skirmish.battlefield.battlefieldPosition
 import apuchau.skirmish.soldier.Soldier
 import apuchau.skirmish.soldier.SoldierId
+import com.natpryce.onError
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 
@@ -22,7 +23,7 @@ class BattleAcceptanceTests {
 
     fun a_skirmish() {
 
-		 val battlefield = Battlefield(BattlefieldBoundaries(2,1))
+		 val battlefield = createBattlefield(2,1)
 
 		 val arthursArmy = Army("Arthur's army", setOf(KingArthur))
 		 val mordredsArmy = Army("Mordred's army", setOf(Mordred))
@@ -66,6 +67,12 @@ class BattleAcceptanceTests {
 		 assertEquals(battle.snapshot(), expectedSnapshot)
     }
 
+
+	private fun createBattlefield(width: Int, height: Int): Battlefield {
+		return Battlefield(
+			BattlefieldBoundaries.create(width, height)
+				.onError { throw Exception("Invalid boundaries. ${it.reason}") })
+	}
 
 
 }

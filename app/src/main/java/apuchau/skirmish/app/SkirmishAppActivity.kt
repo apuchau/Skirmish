@@ -34,7 +34,7 @@ class SkirmishAppActivity : Activity() {
 
 	private fun createBattle() {
 
-		val battlefield = Battlefield(BattlefieldBoundaries(2,1))
+		val battlefield = Battlefield(createBattlefieldBoundaries(2,1))
 
 		val armies = setOf(
 			Army("Arthur's army", setOf(KingArthur)),
@@ -47,6 +47,11 @@ class SkirmishAppActivity : Activity() {
 		)
 
 		battle = Battle.instance(battlefield, armies, soldiersPositions)
+	}
+
+	private fun createBattlefieldBoundaries(width: Int, height: Int): BattlefieldBoundaries {
+		return BattlefieldBoundaries.create(width, height)
+			.onError { throw Exception("Invalid boundaries. ${it.reason}") }
 	}
 
 	fun createBattleView() {
