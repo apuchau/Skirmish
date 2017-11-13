@@ -1,17 +1,14 @@
 package apuchau.skirmish.battle
 
+import apuchau.kotlin.result.assertError
 import apuchau.skirmish.army.Army
 import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.battlefield.BattlefieldBoundaries
 import apuchau.skirmish.battlefield.battlefieldPosition
-import apuchau.skirmish.exception.InvalidSoldiersPosition
-import apuchau.skirmish.exception.NotEnoughSoldiers
-import apuchau.skirmish.exception.SoldierNotInArmy
 import apuchau.skirmish.soldier.Soldier
 import apuchau.skirmish.soldier.SoldierId
 import com.natpryce.onError
 import org.junit.Test
-import kotlin.test.assertFailsWith
 
 class BattleTests {
 
@@ -24,11 +21,12 @@ class BattleTests {
 			Army("Army A", setOf(Soldier(SoldierId("SoldierA1"))))
 		)
 
-		assertFailsWith(NotEnoughSoldiers::class) {
+		assertError(
 			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
 				Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(1,1))
-			)))
-		}
+			))),
+			"You need at least two armies to battle"
+		)
 	}
 
 	@Test
@@ -41,13 +39,13 @@ class BattleTests {
 			Army("Army B", setOf(Soldier(SoldierId("SoldierB1"))))
 		)
 
-		assertFailsWith(SoldierNotInArmy::class) {
+		assertError(
 			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
 				Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(1,1)),
 				Pair(Soldier(SoldierId("SoldierB1")), battlefieldPosition(2,1)),
 				Pair(Soldier(SoldierId("SoldierC1")), battlefieldPosition(3,1))
-			)))
-		}
+			))),
+			"Not all soldiers in the battlefield belong to armies")
 	}
 
 	@Test
@@ -60,17 +58,19 @@ class BattleTests {
 			Army("Army B", setOf(Soldier(SoldierId("SoldierB1"))))
 		)
 
-		assertFailsWith(NotEnoughSoldiers::class) {
+		assertError (
 			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
 				Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(1,1))
-			)))
-		}
+			))),
+			"Not all armies are represented in the battlefield"
+		)
 
-		assertFailsWith(NotEnoughSoldiers::class) {
+		assertError(
 			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
 				Pair(Soldier(SoldierId("SoldierB1")), battlefieldPosition(1,1))
-			)))
-		}
+			))),
+			"Not all armies are represented in the battlefield"
+		)
 	}
 
 	@Test
@@ -83,12 +83,13 @@ class BattleTests {
 			Army("Army B", setOf(Soldier(SoldierId("SoldierB1"))))
 		)
 
-		assertFailsWith(InvalidSoldiersPosition::class) {
+		assertError(
 			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
 				Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(1,1)),
 				Pair(Soldier(SoldierId("SoldierB1")), battlefieldPosition(3,1))
-			)))
-		}
+			))),
+			"Some positions are out of the battlefield bounds"
+		)
 	}
 
 

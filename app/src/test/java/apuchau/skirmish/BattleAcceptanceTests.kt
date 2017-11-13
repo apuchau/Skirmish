@@ -35,7 +35,7 @@ class BattleAcceptanceTests {
 			 Pair(Mordred, battlefieldPosition(2,1))
 		 ))
 
-		 val battle = Battle.instance(battlefield, armies, soldiersPositions)
+		 val battle = createBattle(battlefield, armies, soldiersPositions)
 
 		 val startingBattlePositions = SoldiersBattlePositions(listOf(
 			 Pair(KingArthur, battlefieldPosition(1, 1)),
@@ -66,6 +66,13 @@ class BattleAcceptanceTests {
 
 		 assertEquals(battle.snapshot(), expectedSnapshot)
     }
+
+	private fun createBattle(battlefield: Battlefield,
+									 armies: Set<Army>,
+									 soldiersPositions: SoldiersBattlePositions): Battle {
+		return Battle.instance(battlefield, armies, soldiersPositions)
+			.onError { throw Exception("Can't create battle. ${it.reason}") }
+	}
 
 
 	private fun createBattlefield(width: Int, height: Int): Battlefield {

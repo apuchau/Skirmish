@@ -47,6 +47,7 @@ class SkirmishAppActivity : Activity() {
 		)
 
 		battle = Battle.instance(battlefield, armies, soldiersPositions)
+			.onError { throw Exception("Can't create battle. ${it.reason}") }
 	}
 
 	private fun createBattlefieldBoundaries(width: Int, height: Int): BattlefieldBoundaries {
