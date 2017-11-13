@@ -18,7 +18,7 @@ class BattleTests {
 		val battlefield = createBattlefield(2,1)
 
 		val armies = setOf(
-			Army("Army A", setOf(Soldier(SoldierId("SoldierA1"))))
+			createArmy("Army A", setOf(Soldier(SoldierId("SoldierA1"))))
 		)
 
 		assertError(
@@ -35,8 +35,8 @@ class BattleTests {
 		val battlefield = createBattlefield(3,1)
 
 		val armies = setOf(
-			Army("Army A", setOf(Soldier(SoldierId("SoldierA1")))),
-			Army("Army B", setOf(Soldier(SoldierId("SoldierB1"))))
+			createArmy("Army A", setOf(Soldier(SoldierId("SoldierA1")))),
+			createArmy("Army B", setOf(Soldier(SoldierId("SoldierB1"))))
 		)
 
 		assertError(
@@ -54,8 +54,8 @@ class BattleTests {
 		val battlefield = createBattlefield(2,1)
 
 		val armies = setOf(
-			Army("Army A", setOf(Soldier(SoldierId("SoldierA1")))),
-			Army("Army B", setOf(Soldier(SoldierId("SoldierB1"))))
+			createArmy("Army A", setOf(Soldier(SoldierId("SoldierA1")))),
+			createArmy("Army B", setOf(Soldier(SoldierId("SoldierB1"))))
 		)
 
 		assertError (
@@ -79,8 +79,8 @@ class BattleTests {
 		val battlefield = createBattlefield(2,1)
 
 		val armies = setOf(
-			Army("Army A", setOf(Soldier(SoldierId("SoldierA1")))),
-			Army("Army B", setOf(Soldier(SoldierId("SoldierB1"))))
+			createArmy("Army A", setOf(Soldier(SoldierId("SoldierA1")))),
+			createArmy("Army B", setOf(Soldier(SoldierId("SoldierB1"))))
 		)
 
 		assertError(
@@ -99,8 +99,8 @@ class BattleTests {
 		val battlefield = createBattlefield(3,5)
 
 		val armies = setOf(
-			Army("Army A", setOf(Soldier(SoldierId("SoldierA1")))),
-			Army("Army B", setOf(Soldier(SoldierId("SoldierB1"))))
+			createArmy("Army A", setOf(Soldier(SoldierId("SoldierA1")))),
+			createArmy("Army B", setOf(Soldier(SoldierId("SoldierB1"))))
 		)
 
 		Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
@@ -110,9 +110,12 @@ class BattleTests {
 	}
 
 
-	private fun createBattlefield(width: Int, height: Int): Battlefield {
-		return Battlefield(
+	private fun createBattlefield(width: Int, height: Int): Battlefield =
+		Battlefield(
 			BattlefieldBoundaries.create(width, height)
-				.onError { throw Exception("Invalid boundaries. ${it.reason}") })
-	}
+				.onError { throw Exception("Can't create battlefield. ${it.reason}") })
+
+	private fun createArmy(armyId: String, soldiers: Set<Soldier>) : Army =
+		Army.create(armyId, soldiers)
+			.onError { throw Exception("Can't create army: ${it.reason } ")}
 }

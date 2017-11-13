@@ -25,8 +25,8 @@ class BattleAcceptanceTests {
 
 		 val battlefield = createBattlefield(2,1)
 
-		 val arthursArmy = Army("Arthur's army", setOf(KingArthur))
-		 val mordredsArmy = Army("Mordred's army", setOf(Mordred))
+		 val arthursArmy = createArmy("Arthur's army", setOf(KingArthur))
+		 val mordredsArmy = createArmy("Mordred's army", setOf(Mordred))
 
 		 val armies = setOf(arthursArmy, mordredsArmy)
 
@@ -75,11 +75,13 @@ class BattleAcceptanceTests {
 	}
 
 
-	private fun createBattlefield(width: Int, height: Int): Battlefield {
-		return Battlefield(
+	private fun createBattlefield(width: Int, height: Int): Battlefield =
+		Battlefield(
 			BattlefieldBoundaries.create(width, height)
 				.onError { throw Exception("Invalid boundaries. ${it.reason}") })
-	}
 
+	private fun createArmy(armyId: String, soldiers: Set<Soldier>) : Army =
+		Army.create(armyId, soldiers)
+			.onError( { throw Exception("Can't create army. ${it.reason}") })
 
 }

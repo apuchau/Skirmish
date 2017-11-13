@@ -1,22 +1,28 @@
 package apuchau.skirmish.army
 
-import apuchau.skirmish.exception.NotEnoughSoldiers
 import apuchau.skirmish.soldier.Soldier
+import com.natpryce.Err
+import com.natpryce.Ok
+import com.natpryce.Result
+import com.natpryce.map
 
-class Army(armyId: String, soldiers: Set<Soldier>) {
+class Army private constructor(var armyId: String, var soldiers: Set<Soldier>) {
 
-	private var armyId: String
-	var soldiers: Set<Soldier>
+	companion object Factory {
 
-	init {
-		checkArmyHasSoldiers(soldiers)
-		this.armyId = armyId
-		this.soldiers = soldiers
-	}
+		fun create(armyId: String, soldiers: Set<Soldier>) : Result<Army,String> {
 
-	private fun checkArmyHasSoldiers(soldiers: Set<Soldier>) {
-		if (soldiers.isEmpty()) {
-			throw NotEnoughSoldiers("You need at least one soldier in an army")
+			return checkArmyHasSoldiers(soldiers)
+				.map { Army(armyId, soldiers) }
+		}
+
+		private fun checkArmyHasSoldiers(soldiers: Set<Soldier>) : Result<Unit, String> {
+			return if (soldiers.isEmpty()) {
+				Err("You need at least one soldier in an army")
+			}
+			else {
+				Ok(Unit)
+			}
 		}
 	}
 
@@ -28,5 +34,6 @@ class Army(armyId: String, soldiers: Set<Soldier>) {
 			other != null
 		&& other is Army
 		&& armyId.equals(other.armyId)
+
 	override fun toString(): String = "Army '$armyId': Soldiers: $soldiers"
 }

@@ -1,16 +1,14 @@
 package apuchau.skirmish.army
 
-import apuchau.skirmish.exception.NotEnoughSoldiers
+import apuchau.kotlin.result.assertError
 import org.junit.Test
-import kotlin.test.assertFailsWith
 
 class ArmyTests {
 
 	@Test
-	fun if_army_has_no_soldiers__throw_exception() {
+	fun if_army_has_no_soldiers__then_error() {
 
-		assertFailsWith(NotEnoughSoldiers::class) {
-			Army("Army A", emptySet())
-		}
+		assertError(Army.create("Army A", emptySet()),
+			"You need at least one soldier in an army")
 	}
 }

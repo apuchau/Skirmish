@@ -37,8 +37,8 @@ class SkirmishAppActivity : Activity() {
 		val battlefield = Battlefield(createBattlefieldBoundaries(2,1))
 
 		val armies = setOf(
-			Army("Arthur's army", setOf(KingArthur)),
-			Army("Mordred's army", setOf(Mordred))
+			createArmy("Arthur's army", setOf(KingArthur)),
+			createArmy("Mordred's army", setOf(Mordred))
 		)
 
 		val soldiersPositions = SoldiersBattlePositions(listOf(
@@ -78,6 +78,10 @@ class SkirmishAppActivity : Activity() {
 	}
 
 	fun battlefieldPosition(x: Int, y: Int) =
-		BattlefieldPosition.create(x,y).onError { throw Exception("Unexpected error preparing data for app") }
+		BattlefieldPosition.create(x,y)
+			.onError { throw Exception("Can't create position. ${it.reason}") }
 
+	fun createArmy(armyId: String, soldiers: Set<Soldier>) =
+		Army.create(armyId, soldiers)
+			.onError { throw Exception("Can't create army. ${it.reason}") }
 }
