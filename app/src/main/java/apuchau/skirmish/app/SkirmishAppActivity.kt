@@ -29,6 +29,7 @@ class SkirmishAppActivity : Activity() {
 		super.onCreate(savedInstanceState)
 		createBattle()
 		createBattleView()
+		displayBattle()
 	}
 
 	private fun createBattle() {
@@ -61,7 +62,7 @@ class SkirmishAppActivity : Activity() {
 		val battleView = BattleTextView(this)
 		layout.addView(battleView)
 
-		displayBattle()
+		this.battleView = battleView
 	}
 
 	fun displayBattle() {

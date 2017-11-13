@@ -15,7 +15,7 @@ class BattleTextView(context: Context?) : TextView(context), BattleView {
 	}
 
 	override fun displayBattleStatus(battlefield: Battlefield) {
-		this.setText(createBattleStatusTextVersion(battlefield))
+		setText(createBattleStatusTextVersion(battlefield))
 	}
 
 	private fun createBattleStatusTextVersion(battlefield: Battlefield): String {
