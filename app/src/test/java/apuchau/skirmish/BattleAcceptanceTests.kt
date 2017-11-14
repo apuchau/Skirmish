@@ -20,8 +20,7 @@ class BattleAcceptanceTests {
     private val Mordred = Soldier(SoldierId("Mordred"))
 
     @Test
-
-    fun a_skirmish() {
+    fun a_skirmish_with_two_soldiers_next_to_each_other_and_fighting_to_death() {
 
 		 val battlefield = createBattlefield(2,1)
 
@@ -30,17 +29,12 @@ class BattleAcceptanceTests {
 
 		 val armies = setOf(arthursArmy, mordredsArmy)
 
-		 val soldiersPositions = SoldiersBattlePositions(listOf(
+		 val startingBattlePositions = SoldiersBattlePositions(listOf(
 			 Pair(KingArthur, battlefieldPosition(1,1)),
 			 Pair(Mordred, battlefieldPosition(2,1))
 		 ))
 
-		 val battle = createBattle(battlefield, armies, soldiersPositions)
-
-		 val startingBattlePositions = SoldiersBattlePositions(listOf(
-			 Pair(KingArthur, battlefieldPosition(1, 1)),
-			 Pair(Mordred, battlefieldPosition(2, 1))
-		 ))
+		 val battle = createBattle(battlefield, armies, startingBattlePositions)
 
 		 var expectedSnapshot = BattleSnapshot(
 			 battlefield,
@@ -73,7 +67,6 @@ class BattleAcceptanceTests {
 		return Battle.instance(battlefield, armies, soldiersPositions)
 			.onError { throw Exception("Can't create battle. ${it.reason}") }
 	}
-
 
 	private fun createBattlefield(width: Int, height: Int): Battlefield =
 		Battlefield(
