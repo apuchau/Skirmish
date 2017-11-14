@@ -40,15 +40,8 @@ class Battle1vs1SoldiersAcceptanceTests {
 
 		 battle.timeCycle()
 
-		 val expectedSnapshot = BattleSnapshot(
-			 battlefield,
-			 startingBattlePositions,
-			 mapOf(
-				 Pair(arthursArmy, mapOf(Pair(KingArthur, SoldierStatus.FIGHTING))),
-				 Pair(mordredsArmy, mapOf(Pair(Mordred, SoldierStatus.FIGHTING)))
-			 ))
-
-		 assertEquals(battle.snapshot(), expectedSnapshot)
+		 assertBattleSnapshot(battle.snapshot())
+			 .assertAllSoldiersBattling()
     }
 
 	private fun assertBattleSnapshot(snapshot: BattleSnapshot): BattleSnapshotAsserter =
