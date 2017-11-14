@@ -1,10 +1,7 @@
 package apuchau.skirmish
 
 import apuchau.skirmish.army.Army
-import apuchau.skirmish.battle.Battle
-import apuchau.skirmish.battle.BattleSnapshot
-import apuchau.skirmish.battle.SoldierStatus
-import apuchau.skirmish.battle.SoldiersBattlePositions
+import apuchau.skirmish.battle.*
 import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.battlefield.BattlefieldBoundaries
 import apuchau.skirmish.battlefield.battlefieldPosition
@@ -36,30 +33,26 @@ class Battle1vs1SoldiersAcceptanceTests {
 
 		 val battle = createBattle(battlefield, armies, startingBattlePositions)
 
-		 var expectedSnapshot = BattleSnapshot(
-			 battlefield,
-			 startingBattlePositions,
-			 mapOf(
-				 Pair( arthursArmy, mapOf(Pair(KingArthur, SoldierStatus.DOING_NOTHING))),
-				 Pair( mordredsArmy, mapOf(Pair(Mordred, SoldierStatus.DOING_NOTHING)))
-			 ))
-
-		 assertEquals(battle.snapshot(), expectedSnapshot)
+		 assertBattleSnapshot(battle.snapshot())
+			 .assertAllSoldiersIdle()
 
 		 // If two soldiers of are next to each other, they fight
 
 		 battle.timeCycle()
 
-		 expectedSnapshot = BattleSnapshot(
+		 val expectedSnapshot = BattleSnapshot(
 			 battlefield,
 			 startingBattlePositions,
 			 mapOf(
-				 Pair( arthursArmy, mapOf(Pair(KingArthur, SoldierStatus.FIGHTING))),
-				 Pair( mordredsArmy, mapOf(Pair(Mordred, SoldierStatus.FIGHTING)))
+				 Pair(arthursArmy, mapOf(Pair(KingArthur, SoldierStatus.FIGHTING))),
+				 Pair(mordredsArmy, mapOf(Pair(Mordred, SoldierStatus.FIGHTING)))
 			 ))
 
 		 assertEquals(battle.snapshot(), expectedSnapshot)
     }
+
+	private fun assertBattleSnapshot(snapshot: BattleSnapshot): BattleSnapshotAsserter =
+		BattleSnapshotAsserter(snapshot)
 
 	@Test
 	fun a_skirmish_with_two_soldiers_not_next_to_each_other_cant_fight() {
