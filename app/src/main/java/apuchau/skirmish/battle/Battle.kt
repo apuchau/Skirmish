@@ -92,10 +92,35 @@ class Battle private constructor(val battlefield: Battlefield,
 	}
 
 	fun timeCycle() {
+		putAdjacentSoldiersToFight()
+	}
+
+	private fun putAdjacentSoldiersToFight() {
 
 		this.soldiersStatuses = armies
-			.map { army -> Pair(army, army.soldiers.map{ soldier -> Pair(soldier, SoldierStatus.FIGHTING) }.toMap()) }
+			.map { army -> Pair(army,
+				army.soldiers.map{ soldier -> Pair(soldier, calculateSoldierStatus(soldiersPositions, soldier)) }.toMap()) }
 			.toMap()
 
 	}
+
+	private fun calculateSoldierStatus(soldiersPositions: SoldiersBattlePositions, soldier: Soldier): SoldierStatus {
+		return if (hasSoldierAdjacentEnemies(soldiersPositions, soldier)) {
+			SoldierStatus.FIGHTING
+		}
+		else {
+			SoldierStatus.DOING_NOTHING
+		}
+	}
+
+	private fun hasSoldierAdjacentEnemies(soldiersPositions: SoldiersBattlePositions, soldier: Soldier): Boolean =
+		soldiersPositions.soldiersAdjacentToSoldier(soldier)
+			.any { adjacentSoldier -> areSoldierEnemies(soldier, adjacentSoldier) }
+
+	private fun areSoldierEnemies(soldierA: Soldier, soldierB: Soldier): Boolean =
+		armyOf(soldierA) != armyOf(soldierB)
+
+	private fun armyOf(soldier: Soldier): Army =
+		armies.find { army -> army.containsSoldier(soldier) }!!
+
 }

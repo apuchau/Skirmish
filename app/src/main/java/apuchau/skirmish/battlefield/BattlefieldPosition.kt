@@ -36,4 +36,20 @@ class BattlefieldPosition private constructor(val x: Int, val y: Int) {
 	override fun toString(): String {
 		return "Position($x,$y)"
 	}
+
+	fun adjacentPositions(): Set<BattlefieldPosition> =
+
+		setOf(
+			BattlefieldPosition.create(x-1, y-1),
+			BattlefieldPosition.create(x, y-1),
+			BattlefieldPosition.create(x+1, y-1),
+			BattlefieldPosition.create(x-1, y),
+			BattlefieldPosition.create(x+1, y),
+			BattlefieldPosition.create(x-1, y+1),
+			BattlefieldPosition.create(x, y+1),
+			BattlefieldPosition.create(x+1, y+1)
+		)
+			.map { it -> it.valueOrNull() }
+			.filterNotNull()
+			.toSet()
 }

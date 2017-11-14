@@ -6,6 +6,7 @@ import apuchau.skirmish.soldier.Soldier
 import com.natpryce.*
 
 class SoldiersBattlePositions internal constructor(
+
 	positions : Collection<Pair<Soldier,BattlefieldPosition>>) {
 
 	private var soldiersAndPositions: List<Pair<Soldier, BattlefieldPosition>>
@@ -71,6 +72,36 @@ class SoldiersBattlePositions internal constructor(
 		soldiersAndPositions
 			.map { it.first }
 			.any { it == soldier }
+
+	fun soldiersAdjacentToSoldier(soldier: Soldier): Set<Soldier> {
+
+		val position = soldierPosition(soldier)
+
+			return if (position == null)
+				emptySet()
+					else
+				position.adjacentPositions()
+					.map { adjancentPosition -> soldierAtPosition(adjancentPosition) }
+					.filterNotNull()
+					.toSet()
+	}
+
+	private fun soldierAtPosition(position: BattlefieldPosition): Soldier? {
+
+		val soldierAndPosition = soldiersAndPositions
+			.find { it.second == position }
+
+		return soldierAndPosition?.first
+	}
+
+	private fun soldierPosition(soldier: Soldier): BattlefieldPosition? {
+
+		val soldierAndPosition = soldiersAndPositions
+			.find { it.first == soldier }
+
+		return soldierAndPosition?.second
+
+	}
 
 	override fun toString(): String = soldiersAndPositions.toString()
 

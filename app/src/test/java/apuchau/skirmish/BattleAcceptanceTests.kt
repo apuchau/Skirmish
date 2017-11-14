@@ -61,6 +61,48 @@ class BattleAcceptanceTests {
 		 assertEquals(battle.snapshot(), expectedSnapshot)
     }
 
+	@Test
+	fun a_skirmish_with_two_soldiers_not_next_to_each_other_cant_fight() {
+
+		val battlefield = createBattlefield(3,1)
+
+		val arthursArmy = createArmy("Arthur's army", setOf(KingArthur))
+		val mordredsArmy = createArmy("Mordred's army", setOf(Mordred))
+
+		val armies = setOf(arthursArmy, mordredsArmy)
+
+		val startingBattlePositions = SoldiersBattlePositions(listOf(
+			Pair(KingArthur, battlefieldPosition(1,1)),
+			Pair(Mordred, battlefieldPosition(3,1))
+		))
+
+		val battle = createBattle(battlefield, armies, startingBattlePositions)
+
+		var expectedSnapshot = BattleSnapshot(
+			battlefield,
+			startingBattlePositions,
+			mapOf(
+				Pair( arthursArmy, mapOf(Pair(KingArthur, SoldierStatus.DOING_NOTHING))),
+				Pair( mordredsArmy, mapOf(Pair(Mordred, SoldierStatus.DOING_NOTHING)))
+			))
+
+		assertEquals(battle.snapshot(), expectedSnapshot)
+
+		// If two soldiers of are not next to each other, they don't fight
+
+		battle.timeCycle()
+
+		expectedSnapshot = BattleSnapshot(
+			battlefield,
+			startingBattlePositions,
+			mapOf(
+				Pair( arthursArmy, mapOf(Pair(KingArthur, SoldierStatus.DOING_NOTHING))),
+				Pair( mordredsArmy, mapOf(Pair(Mordred, SoldierStatus.DOING_NOTHING)))
+			))
+
+		assertEquals(battle.snapshot(), expectedSnapshot)
+	}
+
 	private fun createBattle(battlefield: Battlefield,
 									 armies: Set<Army>,
 									 soldiersPositions: SoldiersBattlePositions): Battle {
