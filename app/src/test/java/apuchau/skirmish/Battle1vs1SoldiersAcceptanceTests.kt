@@ -14,20 +14,20 @@ import com.natpryce.onError
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 
-class BattleAcceptanceTests {
+class Battle1vs1SoldiersAcceptanceTests {
 
-    private val KingArthur = Soldier(SoldierId("King Arthur"))
-    private val Mordred = Soldier(SoldierId("Mordred"))
+	private val battlefield = createBattlefield(3,1)
+
+	private val KingArthur = Soldier(SoldierId("King Arthur"))
+	private val Mordred = Soldier(SoldierId("Mordred"))
+
+	private val arthursArmy = createArmy("Arthur's army", setOf(KingArthur))
+	private val mordredsArmy = createArmy("Mordred's army", setOf(Mordred))
+
+	private val armies = setOf(arthursArmy, mordredsArmy)
 
     @Test
     fun a_skirmish_with_two_soldiers_next_to_each_other_and_fighting_to_death() {
-
-		 val battlefield = createBattlefield(2,1)
-
-		 val arthursArmy = createArmy("Arthur's army", setOf(KingArthur))
-		 val mordredsArmy = createArmy("Mordred's army", setOf(Mordred))
-
-		 val armies = setOf(arthursArmy, mordredsArmy)
 
 		 val startingBattlePositions = SoldiersBattlePositions(listOf(
 			 Pair(KingArthur, battlefieldPosition(1,1)),
@@ -63,13 +63,6 @@ class BattleAcceptanceTests {
 
 	@Test
 	fun a_skirmish_with_two_soldiers_not_next_to_each_other_cant_fight() {
-
-		val battlefield = createBattlefield(3,1)
-
-		val arthursArmy = createArmy("Arthur's army", setOf(KingArthur))
-		val mordredsArmy = createArmy("Mordred's army", setOf(Mordred))
-
-		val armies = setOf(arthursArmy, mordredsArmy)
 
 		val startingBattlePositions = SoldiersBattlePositions(listOf(
 			Pair(KingArthur, battlefieldPosition(1,1)),
