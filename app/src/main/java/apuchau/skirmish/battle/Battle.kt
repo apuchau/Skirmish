@@ -5,11 +5,11 @@ import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.soldier.Soldier
 import com.natpryce.*
 
-class Battle private constructor(val battlefield: Battlefield,
+class Battle private constructor(private val battlefield: Battlefield,
 											 private val armies: Set<Army>,
 											 private val soldiersPositions: SoldiersBattlePositions) {
 
-	private var soldiersAction: Map<Army, Map<Soldier, SoldierAction>> = emptyMap()
+	private var soldiersActions: Map<Army, Map<Soldier, SoldierAction>> = emptyMap()
 
 	companion object Factory {
 
@@ -77,14 +77,14 @@ class Battle private constructor(val battlefield: Battlefield,
 
 	private fun initSoldiersStatuses(armies: Set<Army>) {
 
-		this.soldiersAction = armies
+		this.soldiersActions = armies
 			.map { army -> Pair(army, army.soldiers.map{ soldier -> Pair(soldier, SoldierAction.DO_NOTHING) }.toMap()) }
 			.toMap()
 
 	}
 
 	fun snapshot(): BattleSnapshot {
-		return BattleSnapshot(battlefield, soldiersPositions, soldiersAction)
+		return BattleSnapshot(battlefield, soldiersPositions, soldiersActions)
 	}
 
 	override fun toString(): String {
@@ -97,7 +97,7 @@ class Battle private constructor(val battlefield: Battlefield,
 
 	private fun putAdjacentSoldiersToFight() {
 
-		this.soldiersAction = armies
+		this.soldiersActions = armies
 			.map { army -> Pair(army,
 				army.soldiers.map{ soldier -> Pair(soldier, calculateSoldierStatus(soldiersPositions, soldier)) }.toMap()) }
 			.toMap()

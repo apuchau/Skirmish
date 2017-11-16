@@ -1,7 +1,7 @@
 package apuchau.skirmish.app
 
-import apuchau.skirmish.battlefield.Battlefield
+import apuchau.skirmish.battle.BattleSnapshot
 
 interface BattleView {
-	fun displayBattleStatus(battlefield: Battlefield)
+	fun displayBattleSnapshot(snapshot: BattleSnapshot)
 }

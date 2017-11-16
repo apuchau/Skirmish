@@ -74,7 +74,7 @@ class SkirmishAppActivity : Activity() {
 	fun displayBattle() {
 
 		val battle = this.battle ?: return
-		this.battleView?.displayBattleStatus((battle.battlefield))
+		this.battleView?.displayBattleSnapshot(battle.snapshot())
 	}
 
 	fun battlefieldPosition(x: Int, y: Int) =

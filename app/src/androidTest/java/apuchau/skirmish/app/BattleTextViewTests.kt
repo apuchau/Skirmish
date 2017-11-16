@@ -5,8 +5,15 @@ import android.support.test.runner.AndroidJUnit4
 import android.view.ViewGroup
 import android.widget.TextView
 import apuchau.skirmish.app.text.BattleTextView
+import apuchau.skirmish.army.Army
+import apuchau.skirmish.battle.BattleSnapshot
+import apuchau.skirmish.battle.SoldierAction
+import apuchau.skirmish.battle.SoldiersBattlePositions
 import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.battlefield.BattlefieldBoundaries
+import apuchau.skirmish.battlefield.BattlefieldPosition
+import apuchau.skirmish.soldier.Soldier
+import apuchau.skirmish.soldier.SoldierId
 import com.natpryce.onError
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -16,14 +23,21 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class BattleTextViewTests {
 
+	private val KingArthur = Soldier(SoldierId("King Arthur"))
+
 	@Test
 	fun when_no_soldiers_and_battlefield_empty_battlefield_is_displayed() {
 
 		val context = InstrumentationRegistry.getTargetContext()
 		val battlefield = createBattlefield(3,2)
+		val battlePositions = SoldiersBattlePositions(listOf(
+			Pair(KingArthur, battlePosition(1,1))
+		))
+		val soldiersActions : Map<Army, Map<Soldier, SoldierAction>> = emptyMap()
+		val battleSnapshot = BattleSnapshot(battlefield, battlePositions, soldiersActions)
 
 		val view = BattleTextView(context)
-		view.displayBattleStatus(battlefield)
+		view.displayBattleSnapshot(snapshot = battleSnapshot)
 		view.setLayoutParams(ViewGroup.LayoutParams(100, 100))
 
 		val expectedStatusText =
@@ -46,5 +60,7 @@ class BattleTextViewTests {
 				.onError { throw Exception("Invalid boundaries. ${it.reason}") })
 	}
 
+	private fun battlePosition(x: Int, y: Int): BattlefieldPosition =
+		BattlefieldPosition.create(x,y).onError { throw Exception("Error creating battlefield position") }
 
 }

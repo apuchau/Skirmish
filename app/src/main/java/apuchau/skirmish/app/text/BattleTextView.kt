@@ -5,7 +5,7 @@ import android.graphics.Typeface
 import android.util.TypedValue
 import android.widget.TextView
 import apuchau.skirmish.app.BattleView
-import apuchau.skirmish.battlefield.Battlefield
+import apuchau.skirmish.battle.BattleSnapshot
 
 class BattleTextView(context: Context?) : TextView(context), BattleView {
 
@@ -14,13 +14,13 @@ class BattleTextView(context: Context?) : TextView(context), BattleView {
 		this.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40F)
 	}
 
-	override fun displayBattleStatus(battlefield: Battlefield) {
-		setText(createBattleStatusTextVersion(battlefield))
+	override fun displayBattleSnapshot(snapshot: BattleSnapshot) {
+		setText(createBattleStatusTextVersion(snapshot))
 	}
 
-	private fun createBattleStatusTextVersion(battlefield: Battlefield): String {
+	private fun createBattleStatusTextVersion(battleSnapshot: BattleSnapshot): String {
 
-		var boundaries = battlefield.boundaries
+		val boundaries = battleSnapshot.battlefield.boundaries
 
 		val topBorder = "┏" + "━".repeat(boundaries.width) + "┓\n"
 		val emptyRow = "┃" + " ".repeat(boundaries.width) + "┃\n"
