@@ -9,7 +9,7 @@ class Battle private constructor(val battlefield: Battlefield,
 											 private val armies: Set<Army>,
 											 private val soldiersPositions: SoldiersBattlePositions) {
 
-	private var soldiersStatuses : Map<Army, Map<Soldier, SoldierStatus>> = emptyMap()
+	private var soldiersAction: Map<Army, Map<Soldier, SoldierAction>> = emptyMap()
 
 	companion object Factory {
 
@@ -77,14 +77,14 @@ class Battle private constructor(val battlefield: Battlefield,
 
 	private fun initSoldiersStatuses(armies: Set<Army>) {
 
-		this.soldiersStatuses = armies
-			.map { army -> Pair(army, army.soldiers.map{ soldier -> Pair(soldier, SoldierStatus.DOING_NOTHING) }.toMap()) }
+		this.soldiersAction = armies
+			.map { army -> Pair(army, army.soldiers.map{ soldier -> Pair(soldier, SoldierAction.DO_NOTHING) }.toMap()) }
 			.toMap()
 
 	}
 
 	fun snapshot(): BattleSnapshot {
-		return BattleSnapshot(battlefield, soldiersPositions, soldiersStatuses)
+		return BattleSnapshot(battlefield, soldiersPositions, soldiersAction)
 	}
 
 	override fun toString(): String {
@@ -97,19 +97,19 @@ class Battle private constructor(val battlefield: Battlefield,
 
 	private fun putAdjacentSoldiersToFight() {
 
-		this.soldiersStatuses = armies
+		this.soldiersAction = armies
 			.map { army -> Pair(army,
 				army.soldiers.map{ soldier -> Pair(soldier, calculateSoldierStatus(soldiersPositions, soldier)) }.toMap()) }
 			.toMap()
 
 	}
 
-	private fun calculateSoldierStatus(soldiersPositions: SoldiersBattlePositions, soldier: Soldier): SoldierStatus {
+	private fun calculateSoldierStatus(soldiersPositions: SoldiersBattlePositions, soldier: Soldier): SoldierAction {
 		return if (hasSoldierAdjacentEnemies(soldiersPositions, soldier)) {
-			SoldierStatus.FIGHTING
+			SoldierAction.FIGHT
 		}
 		else {
-			SoldierStatus.DOING_NOTHING
+			SoldierAction.DO_NOTHING
 		}
 	}
 

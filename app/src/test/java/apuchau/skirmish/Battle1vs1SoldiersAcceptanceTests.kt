@@ -61,8 +61,8 @@ class Battle1vs1SoldiersAcceptanceTests {
 			battlefield,
 			startingBattlePositions,
 			mapOf(
-				Pair( arthursArmy, mapOf(Pair(KingArthur, SoldierStatus.DOING_NOTHING))),
-				Pair( mordredsArmy, mapOf(Pair(Mordred, SoldierStatus.DOING_NOTHING)))
+				Pair( arthursArmy, mapOf(Pair(KingArthur, SoldierAction.DO_NOTHING))),
+				Pair( mordredsArmy, mapOf(Pair(Mordred, SoldierAction.DO_NOTHING)))
 			))
 
 		assertEquals(battle.snapshot(), expectedSnapshot)
@@ -75,8 +75,8 @@ class Battle1vs1SoldiersAcceptanceTests {
 			battlefield,
 			startingBattlePositions,
 			mapOf(
-				Pair( arthursArmy, mapOf(Pair(KingArthur, SoldierStatus.DOING_NOTHING))),
-				Pair( mordredsArmy, mapOf(Pair(Mordred, SoldierStatus.DOING_NOTHING)))
+				Pair( arthursArmy, mapOf(Pair(KingArthur, SoldierAction.DO_NOTHING))),
+				Pair( mordredsArmy, mapOf(Pair(Mordred, SoldierAction.DO_NOTHING)))
 			))
 
 		assertEquals(battle.snapshot(), expectedSnapshot)

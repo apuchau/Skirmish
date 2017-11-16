@@ -6,4 +6,4 @@ import apuchau.skirmish.soldier.Soldier
 
 data class BattleSnapshot(val battlefield: Battlefield,
 								  val soldiersBattlePositions: SoldiersBattlePositions,
-								  val soldiersStatuses: Map<Army, Map<Soldier, SoldierStatus>>)
+								  val soldiersActions: Map<Army, Map<Soldier, SoldierAction>>)

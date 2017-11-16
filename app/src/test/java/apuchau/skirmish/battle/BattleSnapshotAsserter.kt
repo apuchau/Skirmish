@@ -5,19 +5,19 @@ import kotlin.test.assertTrue
 class BattleSnapshotAsserter(val snapshot: BattleSnapshot) {
 
 	fun assertAllSoldiersIdle() {
-		assertAllSoldiersInStatus(SoldierStatus.DOING_NOTHING)
+		assertAllSoldiersDoing(SoldierAction.DO_NOTHING)
 	}
 
 	fun assertAllSoldiersBattling() {
-		assertAllSoldiersInStatus(SoldierStatus.FIGHTING)
+		assertAllSoldiersDoing(SoldierAction.FIGHT)
 	}
 
-	private fun assertAllSoldiersInStatus( expectedStatus : SoldierStatus ) {
+	private fun assertAllSoldiersDoing(expectedAction: SoldierAction) {
 		assertTrue(
-			snapshot.soldiersStatuses
-				.map { armyToSoldierStatuses -> armyToSoldierStatuses.value }
-				.flatMap { soldiersToStatuses -> soldiersToStatuses.values }
-				.all { status -> status == expectedStatus }
+			snapshot.soldiersActions
+				.map { armyToSoldiersActions -> armyToSoldiersActions.value }
+				.flatMap { soldiersToActions -> soldiersToActions.values }
+				.all { action -> action == expectedAction }
 		)
 	}
 }
