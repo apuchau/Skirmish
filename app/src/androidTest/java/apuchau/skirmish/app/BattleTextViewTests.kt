@@ -8,6 +8,7 @@ import apuchau.skirmish.app.text.BattleTextView
 import apuchau.skirmish.battle.BattleSnapshot
 import apuchau.skirmish.battle.SoldiersBattleActions
 import apuchau.skirmish.battle.SoldiersBattlePositions
+import apuchau.skirmish.battle.SoldiersStatuses
 import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.battlefield.BattlefieldBoundaries
 import apuchau.skirmish.battlefield.BattlefieldPosition
@@ -25,14 +26,17 @@ class BattleTextViewTests {
 	private val KingArthur = Soldier(SoldierId("King Arthur"))
 	private val Mordred = Soldier(SoldierId("Mordred"))
 
+	private val allSoldiers = setOf(KingArthur, Mordred)
+
 	@Test
 	fun when_no_soldiers_in_battlefield__empty_battlefield_is_displayed() {
 
 		val context = InstrumentationRegistry.getTargetContext()
 		val battlefield = createBattlefield(3,2)
+		val soldiersStatuses = SoldiersStatuses.withAllHealthy(allSoldiers)
 		val battlePositions = SoldiersBattlePositions(emptyList())
-		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(setOf(KingArthur))
-		val battleSnapshot = BattleSnapshot(battlefield, battlePositions, soldiersActions)
+		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(allSoldiers)
+		val battleSnapshot = BattleSnapshot(battlefield, soldiersStatuses, battlePositions, soldiersActions)
 
 		val view = BattleTextView(context)
 		view.displayBattleSnapshot(snapshot = battleSnapshot)
@@ -52,12 +56,13 @@ class BattleTextViewTests {
 
 		val context = InstrumentationRegistry.getTargetContext()
 		val battlefield = createBattlefield(3,2)
+		val soldiersStatuses = SoldiersStatuses.withAllHealthy(allSoldiers)
 		val battlePositions = SoldiersBattlePositions(listOf(
 			Pair(KingArthur, battlefieldPosition(1,2)),
 			Pair(Mordred, battlefieldPosition(2, 2))
 		))
-		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(setOf(KingArthur))
-		val battleSnapshot = BattleSnapshot(battlefield, battlePositions, soldiersActions)
+		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(allSoldiers)
+		val battleSnapshot = BattleSnapshot(battlefield, soldiersStatuses, battlePositions, soldiersActions)
 
 		val view = BattleTextView(context)
 		view.displayBattleSnapshot(snapshot = battleSnapshot)

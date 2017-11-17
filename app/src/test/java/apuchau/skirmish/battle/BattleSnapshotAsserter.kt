@@ -1,17 +1,30 @@
 package apuchau.skirmish.battle
 
+import apuchau.skirmish.soldier.Soldier
+import apuchau.skirmish.soldier.SoldierStatus
+import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class BattleSnapshotAsserter(val snapshot: BattleSnapshot) {
 
-	fun assertAllSoldiersIdle() {
+	fun assertAllSoldiersIdle() =
 		assertAllSoldiersDoing(SoldierAction.DO_NOTHING)
-	}
 
-	fun assertAllSoldiersBattling() {
+	fun assertAllSoldiersBattling() =
 		assertAllSoldiersDoing(SoldierAction.FIGHT)
+
+	private fun assertAllSoldiersDoing(expectedAction: SoldierAction): BattleSnapshotAsserter {
+		assertTrue(snapshot.soldiersActions.areAllSoldiersDoing(expectedAction))
+		return this
 	}
 
-	private fun assertAllSoldiersDoing(expectedAction: SoldierAction) =
-		assertTrue(snapshot.soldiersActions.areAllSoldiersDoing(expectedAction))
+	fun asertAllSoldiersHealthy() : BattleSnapshotAsserter {
+		assertTrue(snapshot.soldiersStatuses.areAllSoldiersHealthy())
+		return this
+	}
+
+	fun assertSoldierIsWounded(soldier: Soldier): BattleSnapshotAsserter {
+		assertEquals(snapshot.soldiersStatuses.soldierStatus(soldier), SoldierStatus.WOUNDED)
+		return this
+	}
 }

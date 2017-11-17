@@ -59,6 +59,15 @@ class SoldiersBattlePositions internal constructor(positions : Collection<Pair<S
 		this.soldiersAndPositions = positions.toList()
 	}
 
+	override fun toString(): String = soldiersAndPositions.toString()
+
+	override fun hashCode(): Int = soldiersAndPositions.hashCode()
+
+	override fun equals(other: Any?): Boolean =
+		(other != null)
+			&& (other is SoldiersBattlePositions)
+			&& (soldiersAndPositions == other.soldiersAndPositions)
+
 	fun soldiers() : List<Soldier> = soldiersAndPositions.map{ it.first }
 
 	fun areAllWithinBounds(battlefieldBoundaries: BattlefieldBoundaries) =
@@ -104,14 +113,5 @@ class SoldiersBattlePositions internal constructor(positions : Collection<Pair<S
 	fun forEach(fn: (Pair<Soldier,BattlefieldPosition>) -> Unit) {
 		soldiersAndPositions.forEach(fn)
 	}
-
-	override fun toString(): String = soldiersAndPositions.toString()
-
-	override fun hashCode(): Int = soldiersAndPositions.hashCode()
-
-	override fun equals(other: Any?): Boolean =
-		(other != null)
-			&& (other is SoldiersBattlePositions)
-			&& (soldiersAndPositions == other.soldiersAndPositions)
 
 }

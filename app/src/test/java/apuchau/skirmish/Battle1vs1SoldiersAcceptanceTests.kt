@@ -36,12 +36,14 @@ class Battle1vs1SoldiersAcceptanceTests {
 		 assertBattleSnapshot(battle.snapshot())
 			 .assertAllSoldiersIdle()
 
-		 // If two soldiers of are next to each other, they fight
+		 // If two soldiers are next to each other, they fight
 
 		 battle.timeCycle()
 
 		 assertBattleSnapshot(battle.snapshot())
 			 .assertAllSoldiersBattling()
+			 .assertSoldierIsWounded(KingArthur)
+			 .assertSoldierIsWounded(Mordred)
     }
 
 	private fun assertBattleSnapshot(snapshot: BattleSnapshot): BattleSnapshotAsserter =
@@ -49,6 +51,8 @@ class Battle1vs1SoldiersAcceptanceTests {
 
 	@Test
 	fun a_skirmish_with_two_soldiers_not_next_to_each_other_cant_fight() {
+
+		val soldiersStatuses = SoldiersStatuses.withAllHealthy(setOf(KingArthur, Mordred))
 
 		val startingBattlePositions = SoldiersBattlePositions(listOf(
 			Pair(KingArthur, battlefieldPosition(1,1)),
@@ -61,6 +65,7 @@ class Battle1vs1SoldiersAcceptanceTests {
 
 		var expectedSnapshot = BattleSnapshot(
 			battlefield,
+			soldiersStatuses,
 			startingBattlePositions,
 			startingSoldiersActions
 		)
@@ -73,6 +78,7 @@ class Battle1vs1SoldiersAcceptanceTests {
 
 		expectedSnapshot = BattleSnapshot(
 			battlefield,
+			soldiersStatuses,
 			startingBattlePositions,
 			startingSoldiersActions
 		)
