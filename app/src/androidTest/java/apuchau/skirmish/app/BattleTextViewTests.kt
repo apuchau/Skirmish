@@ -29,9 +29,7 @@ class BattleTextViewTests {
 
 		val context = InstrumentationRegistry.getTargetContext()
 		val battlefield = createBattlefield(3,2)
-		val battlePositions = SoldiersBattlePositions(listOf(
-			Pair(KingArthur, battlePosition(1,1))
-		))
+		val battlePositions = SoldiersBattlePositions(emptyList())
 		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(setOf(KingArthur))
 		val battleSnapshot = BattleSnapshot(battlefield, battlePositions, soldiersActions)
 
