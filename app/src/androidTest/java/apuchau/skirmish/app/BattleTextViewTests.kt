@@ -5,7 +5,6 @@ import android.support.test.runner.AndroidJUnit4
 import android.view.ViewGroup
 import android.widget.TextView
 import apuchau.skirmish.app.text.BattleTextView
-import apuchau.skirmish.army.Army
 import apuchau.skirmish.battle.BattleSnapshot
 import apuchau.skirmish.battle.SoldiersBattleActions
 import apuchau.skirmish.battle.SoldiersBattlePositions
@@ -58,11 +57,6 @@ class BattleTextViewTests {
 		return Battlefield(
 			BattlefieldBoundaries.create(width, height)
 				.onError { throw Exception("Invalid boundaries. ${it.reason}") })
-	}
-
-	private fun createArmy(armyId: String, soldiers: Set<Soldier>): Army {
-		return Army.create(armyId, soldiers)
-			.onError { throw Exception("Can't create army. ${it.reason}") }
 	}
 
 	private fun battlePosition(x: Int, y: Int): BattlefieldPosition =
