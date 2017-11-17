@@ -7,7 +7,7 @@ import android.widget.TextView
 import apuchau.skirmish.app.text.BattleTextView
 import apuchau.skirmish.army.Army
 import apuchau.skirmish.battle.BattleSnapshot
-import apuchau.skirmish.battle.SoldierAction
+import apuchau.skirmish.battle.SoldiersBattleActions
 import apuchau.skirmish.battle.SoldiersBattlePositions
 import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.battlefield.BattlefieldBoundaries
@@ -33,7 +33,7 @@ class BattleTextViewTests {
 		val battlePositions = SoldiersBattlePositions(listOf(
 			Pair(KingArthur, battlePosition(1,1))
 		))
-		val soldiersActions : Map<Army, Map<Soldier, SoldierAction>> = emptyMap()
+		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(setOf(createArmy("King Arthur's army", setOf(KingArthur))))
 		val battleSnapshot = BattleSnapshot(battlefield, battlePositions, soldiersActions)
 
 		val view = BattleTextView(context)
@@ -58,6 +58,11 @@ class BattleTextViewTests {
 		return Battlefield(
 			BattlefieldBoundaries.create(width, height)
 				.onError { throw Exception("Invalid boundaries. ${it.reason}") })
+	}
+
+	private fun createArmy(armyId: String, soldiers: Set<Soldier>): Army {
+		return Army.create(armyId, soldiers)
+			.onError { throw Exception("Can't create army. ${it.reason}") }
 	}
 
 	private fun battlePosition(x: Int, y: Int): BattlefieldPosition =

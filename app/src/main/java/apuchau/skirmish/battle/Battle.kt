@@ -6,10 +6,9 @@ import apuchau.skirmish.soldier.Soldier
 import com.natpryce.*
 
 class Battle private constructor(private val battlefield: Battlefield,
-											 private val armies: Set<Army>,
-											 private val soldiersPositions: SoldiersBattlePositions) {
-
-	private var soldiersActions: Map<Army, Map<Soldier, SoldierAction>> = emptyMap()
+											private val armies: Set<Army>,
+											private val soldiersPositions: SoldiersBattlePositions,
+											private var soldiersActions: SoldiersBattleActions) {
 
 	companion object Factory {
 
@@ -21,7 +20,7 @@ class Battle private constructor(private val battlefield: Battlefield,
 				.flatMap { checkAllArmiesHaveRepresentationInBattlefield(armies, soldiersPositions) }
 				.flatMap { checkSoldiersInBattlefieldBelongsToArmies(armies, soldiersPositions) }
 				.flatMap { checkPositionsAreInBattlefieldBounds(battlefield, soldiersPositions) }
-				.map { Battle(battlefield, armies, soldiersPositions) }
+				.map { Battle(battlefield, armies, soldiersPositions, SoldiersBattleActions.withAllDoingNothing(armies)) }
 		}
 
 
@@ -71,18 +70,6 @@ class Battle private constructor(private val battlefield: Battlefield,
 		}
 	}
 
-	init {
-		initSoldiersStatuses(armies)
-	}
-
-	private fun initSoldiersStatuses(armies: Set<Army>) {
-
-		this.soldiersActions = armies
-			.map { army -> Pair(army, army.soldiers.map{ soldier -> Pair(soldier, SoldierAction.DO_NOTHING) }.toMap()) }
-			.toMap()
-
-	}
-
 	fun snapshot(): BattleSnapshot {
 		return BattleSnapshot(battlefield, soldiersPositions, soldiersActions)
 	}
@@ -97,11 +84,14 @@ class Battle private constructor(private val battlefield: Battlefield,
 
 	private fun putAdjacentSoldiersToFight() {
 
-		this.soldiersActions = armies
-			.map { army -> Pair(army,
-				army.soldiers.map{ soldier -> Pair(soldier, calculateSoldierStatus(soldiersPositions, soldier)) }.toMap()) }
-			.toMap()
-
+		armies.forEach { army ->
+			army.soldiers.forEach {
+				soldier ->
+					this.soldiersActions = this.soldiersActions.byChangingSoldiersActions(
+						listOf(Pair(soldier, calculateSoldierStatus(soldiersPositions, soldier)))
+					)
+			}
+		}
 	}
 
 	private fun calculateSoldierStatus(soldiersPositions: SoldiersBattlePositions, soldier: Soldier): SoldierAction {

@@ -55,15 +55,15 @@ class Battle1vs1SoldiersAcceptanceTests {
 			Pair(Mordred, battlefieldPosition(3,1))
 		))
 
+		val startingSoldiersActions = SoldiersBattleActions.withAllDoingNothing(armies)
+
 		val battle = createBattle(battlefield, armies, startingBattlePositions)
 
 		var expectedSnapshot = BattleSnapshot(
 			battlefield,
 			startingBattlePositions,
-			mapOf(
-				Pair( arthursArmy, mapOf(Pair(KingArthur, SoldierAction.DO_NOTHING))),
-				Pair( mordredsArmy, mapOf(Pair(Mordred, SoldierAction.DO_NOTHING)))
-			))
+			startingSoldiersActions
+		)
 
 		assertEquals(battle.snapshot(), expectedSnapshot)
 
@@ -74,10 +74,8 @@ class Battle1vs1SoldiersAcceptanceTests {
 		expectedSnapshot = BattleSnapshot(
 			battlefield,
 			startingBattlePositions,
-			mapOf(
-				Pair( arthursArmy, mapOf(Pair(KingArthur, SoldierAction.DO_NOTHING))),
-				Pair( mordredsArmy, mapOf(Pair(Mordred, SoldierAction.DO_NOTHING)))
-			))
+			startingSoldiersActions
+		)
 
 		assertEquals(battle.snapshot(), expectedSnapshot)
 	}

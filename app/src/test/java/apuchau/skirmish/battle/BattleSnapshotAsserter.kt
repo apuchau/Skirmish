@@ -12,12 +12,6 @@ class BattleSnapshotAsserter(val snapshot: BattleSnapshot) {
 		assertAllSoldiersDoing(SoldierAction.FIGHT)
 	}
 
-	private fun assertAllSoldiersDoing(expectedAction: SoldierAction) {
-		assertTrue(
-			snapshot.soldiersActions
-				.map { armyToSoldiersActions -> armyToSoldiersActions.value }
-				.flatMap { soldiersToActions -> soldiersToActions.values }
-				.all { action -> action == expectedAction }
-		)
-	}
+	private fun assertAllSoldiersDoing(expectedAction: SoldierAction) =
+		assertTrue(snapshot.soldiersActions.areAllSoldiersDoing(expectedAction))
 }
