@@ -16,11 +16,13 @@ class Battle private constructor(private val battlefield: Battlefield,
 						 armies: Set<Army>,
 						 soldiersPositions: SoldiersBattlePositions) : Result<Battle,String> {
 
+			val allSoldiers = armies.map { army -> army.soldiers }.flatten()
+
 			return checkEnoughArmies(armies)
 				.flatMap { checkAllArmiesHaveRepresentationInBattlefield(armies, soldiersPositions) }
 				.flatMap { checkSoldiersInBattlefieldBelongsToArmies(armies, soldiersPositions) }
 				.flatMap { checkPositionsAreInBattlefieldBounds(battlefield, soldiersPositions) }
-				.map { Battle(battlefield, armies, soldiersPositions, SoldiersBattleActions.withAllDoingNothing(armies)) }
+				.map { Battle(battlefield, armies, soldiersPositions, SoldiersBattleActions.withAllDoingNothing(allSoldiers)) }
 		}
 
 

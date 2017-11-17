@@ -55,7 +55,7 @@ class Battle1vs1SoldiersAcceptanceTests {
 			Pair(Mordred, battlefieldPosition(3,1))
 		))
 
-		val startingSoldiersActions = SoldiersBattleActions.withAllDoingNothing(armies)
+		val startingSoldiersActions = SoldiersBattleActions.withAllDoingNothing(setOf(KingArthur, Mordred))
 
 		val battle = createBattle(battlefield, armies, startingBattlePositions)
 

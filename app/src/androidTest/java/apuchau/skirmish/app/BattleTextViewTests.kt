@@ -33,7 +33,7 @@ class BattleTextViewTests {
 		val battlePositions = SoldiersBattlePositions(listOf(
 			Pair(KingArthur, battlePosition(1,1))
 		))
-		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(setOf(createArmy("King Arthur's army", setOf(KingArthur))))
+		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(setOf(KingArthur))
 		val battleSnapshot = BattleSnapshot(battlefield, battlePositions, soldiersActions)
 
 		val view = BattleTextView(context)
