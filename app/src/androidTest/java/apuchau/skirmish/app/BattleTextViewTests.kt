@@ -25,7 +25,7 @@ class BattleTextViewTests {
 	private val KingArthur = Soldier(SoldierId("King Arthur"))
 
 	@Test
-	fun when_no_soldiers_and_battlefield_empty_battlefield_is_displayed() {
+	fun when_no_soldiers_in_battlefield__empty_battlefield_is_displayed() {
 
 		val context = InstrumentationRegistry.getTargetContext()
 		val battlefield = createBattlefield(3,2)
