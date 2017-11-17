@@ -23,6 +23,7 @@ import org.junit.runner.RunWith
 class BattleTextViewTests {
 
 	private val KingArthur = Soldier(SoldierId("King Arthur"))
+	private val Mordred = Soldier(SoldierId("Mordred"))
 
 	@Test
 	fun when_no_soldiers_in_battlefield__empty_battlefield_is_displayed() {
@@ -46,6 +47,31 @@ class BattleTextViewTests {
 		assertViewContent(expectedStatusText, view)
 	}
 
+	@Test
+	fun when_soldiers_in_battlefield__soldiers_and_battlefield_is_displayed() {
+
+		val context = InstrumentationRegistry.getTargetContext()
+		val battlefield = createBattlefield(3,2)
+		val battlePositions = SoldiersBattlePositions(listOf(
+			Pair(KingArthur, battlefieldPosition(1,2)),
+			Pair(Mordred, battlefieldPosition(2, 2))
+		))
+		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(setOf(KingArthur))
+		val battleSnapshot = BattleSnapshot(battlefield, battlePositions, soldiersActions)
+
+		val view = BattleTextView(context)
+		view.displayBattleSnapshot(snapshot = battleSnapshot)
+		view.setLayoutParams(ViewGroup.LayoutParams(100,100))
+
+		val expectedStatusText =
+			   "┏━━━┓\n"+
+				"┃   ┃\n"+
+				"┃SS ┃\n"+
+				"┗━━━┛\n"
+
+		assertViewContent(expectedStatusText, view)
+	}
+
 	private fun assertViewContent(expectedText: String, view: BattleView) {
 		assertTrue(view is TextView)
 		assertEquals(expectedText, (view as TextView).text)
@@ -57,7 +83,7 @@ class BattleTextViewTests {
 				.onError { throw Exception("Invalid boundaries. ${it.reason}") })
 	}
 
-	private fun battlePosition(x: Int, y: Int): BattlefieldPosition =
+	private fun battlefieldPosition(x: Int, y: Int): BattlefieldPosition =
 		BattlefieldPosition.create(x,y).onError { throw Exception("Error creating battlefield position") }
 
 }

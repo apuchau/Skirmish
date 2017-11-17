@@ -5,9 +5,7 @@ import apuchau.skirmish.battlefield.BattlefieldPosition
 import apuchau.skirmish.soldier.Soldier
 import com.natpryce.*
 
-class SoldiersBattlePositions internal constructor(
-
-	positions : Collection<Pair<Soldier,BattlefieldPosition>>) {
+class SoldiersBattlePositions internal constructor(positions : Collection<Pair<Soldier,BattlefieldPosition>>) {
 
 	private var soldiersAndPositions: List<Pair<Soldier, BattlefieldPosition>>
 
@@ -101,6 +99,10 @@ class SoldiersBattlePositions internal constructor(
 
 		return soldierAndPosition?.second
 
+	}
+
+	fun forEach(fn: (Pair<Soldier,BattlefieldPosition>) -> Unit) {
+		soldiersAndPositions.forEach(fn)
 	}
 
 	override fun toString(): String = soldiersAndPositions.toString()

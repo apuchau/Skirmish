@@ -34,7 +34,7 @@ class SkirmishAppActivity : Activity() {
 
 	private fun createBattle() {
 
-		val battlefield = Battlefield(createBattlefieldBoundaries(2,1))
+		val battlefield = Battlefield(createBattlefieldBoundaries(5,3))
 
 		val armies = setOf(
 			createArmy("Arthur's army", setOf(KingArthur)),
@@ -42,8 +42,8 @@ class SkirmishAppActivity : Activity() {
 		)
 
 		val soldiersPositions = SoldiersBattlePositions(listOf(
-			Pair(KingArthur, battlefieldPosition(1,1)),
-			Pair(Mordred, battlefieldPosition(2,1)))
+			Pair(KingArthur, battlefieldPosition(3,2)),
+			Pair(Mordred, battlefieldPosition(4,2)))
 		)
 
 		battle = Battle.instance(battlefield, armies, soldiersPositions)

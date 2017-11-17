@@ -6,6 +6,10 @@ import android.util.TypedValue
 import android.widget.TextView
 import apuchau.skirmish.app.BattleView
 import apuchau.skirmish.battle.BattleSnapshot
+import apuchau.skirmish.battle.SoldiersBattlePositions
+import apuchau.skirmish.battlefield.Battlefield
+import apuchau.skirmish.battlefield.BattlefieldBoundaries
+import apuchau.skirmish.battlefield.BattlefieldPosition
 
 class BattleTextView(context: Context?) : TextView(context), BattleView {
 
@@ -20,7 +24,16 @@ class BattleTextView(context: Context?) : TextView(context), BattleView {
 
 	private fun createBattleStatusTextVersion(battleSnapshot: BattleSnapshot): String {
 
-		val boundaries = battleSnapshot.battlefield.boundaries
+		val battlefieldTxt = createBattlefield(battleSnapshot.battlefield)
+		return displaySoldiersInBattlefield(
+			battlefieldTxt,
+			battleSnapshot.battlefield.boundaries,
+			battleSnapshot.soldiersBattlePositions)
+	}
+
+	fun createBattlefield(battlefield: Battlefield): String {
+
+		val boundaries = battlefield.boundaries
 
 		val topBorder = "┏" + "━".repeat(boundaries.width) + "┓\n"
 		val emptyRow = "┃" + " ".repeat(boundaries.width) + "┃\n"
@@ -30,4 +43,32 @@ class BattleTextView(context: Context?) : TextView(context), BattleView {
 
 		return topBorder + rows + bottomBorder
 	}
+
+	private fun displaySoldiersInBattlefield(
+		battlefieldTxt: String,
+		battlefieldBoundaries: BattlefieldBoundaries,
+		soldiersBattlePositions: SoldiersBattlePositions): String {
+
+		val battleTxt = StringBuilder(battlefieldTxt)
+		soldiersBattlePositions.forEach({
+			soldierAndPosition -> displaySoldierInBattlefield(
+			battleTxt, battlefieldBoundaries, soldierAndPosition.second)
+		})
+		return battleTxt.toString()
+	}
+
+	private fun displaySoldierInBattlefield(
+		battleTxt: StringBuilder,
+		battlefieldBoundaries: BattlefieldBoundaries,
+		position: BattlefieldPosition) {
+
+		val positionInTxt = toPositionInText(position, battlefieldBoundaries)
+		battleTxt.replace(positionInTxt, positionInTxt+1, soldierCharForSoldier().toString())
+	}
+
+	private fun toPositionInText(position: BattlefieldPosition, battlefieldBoundaries: BattlefieldBoundaries): Int {
+		return (position.y * (battlefieldBoundaries.width+2+1)) + position.x
+	}
+
+	private fun soldierCharForSoldier(): Char = 'S'
 }
