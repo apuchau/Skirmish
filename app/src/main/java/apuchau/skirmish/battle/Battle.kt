@@ -135,7 +135,17 @@ class Battle private constructor(private val battlefield: Battlefield,
 		enemiesAdjacentTo(soldier)
 			.forEach {
 				adjacentSoldier -> soldiersStatuses =
-				soldiersStatuses.byChangingSoldierStatus(adjacentSoldier, SoldierStatus.WOUNDED)}
+				soldiersStatuses.byChangingSoldierStatus(adjacentSoldier, calculateStatusAfterBeenHit(adjacentSoldier))}
 	}
+
+	private fun calculateStatusAfterBeenHit(soldier: Soldier): SoldierStatus =
+		when(soldierStatus(soldier)) {
+			SoldierStatus.HEALTHY -> SoldierStatus.WOUNDED
+			SoldierStatus.WOUNDED -> SoldierStatus.DEAD
+			else -> SoldierStatus.DEAD
+		}
+
+	private fun soldierStatus(soldier: Soldier) : SoldierStatus =
+		soldiersStatuses.soldierStatus(soldier) ?: SoldierStatus.HEALTHY
 
 }

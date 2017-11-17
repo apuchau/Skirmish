@@ -18,8 +18,13 @@ class BattleSnapshotAsserter(val snapshot: BattleSnapshot) {
 		return this
 	}
 
-	fun asertAllSoldiersHealthy() : BattleSnapshotAsserter {
+	fun assertAllSoldiersHealthy() : BattleSnapshotAsserter {
 		assertTrue(snapshot.soldiersStatuses.areAllSoldiersHealthy())
+		return this
+	}
+
+	fun assertAllSoldiersDead(): BattleSnapshotAsserter {
+		assertTrue(snapshot.soldiersStatuses.areAllSoldiersDead())
 		return this
 	}
 

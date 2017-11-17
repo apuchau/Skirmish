@@ -35,6 +35,7 @@ class Battle1vs1SoldiersAcceptanceTests {
 
 		 assertBattleSnapshot(battle.snapshot())
 			 .assertAllSoldiersIdle()
+			 .assertAllSoldiersHealthy()
 
 		 // If two soldiers are next to each other, they fight
 
@@ -44,6 +45,11 @@ class Battle1vs1SoldiersAcceptanceTests {
 			 .assertAllSoldiersBattling()
 			 .assertSoldierIsWounded(KingArthur)
 			 .assertSoldierIsWounded(Mordred)
+
+		 battle.timeCycle()
+
+		 assertBattleSnapshot(battle.snapshot())
+			 .assertAllSoldiersDead()
     }
 
 	private fun assertBattleSnapshot(snapshot: BattleSnapshot): BattleSnapshotAsserter =

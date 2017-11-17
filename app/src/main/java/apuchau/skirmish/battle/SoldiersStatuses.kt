@@ -28,10 +28,14 @@ class SoldiersStatuses private constructor(val soldiersStatuses: Map<Soldier,Sol
 	fun areAllSoldiersHealthy(): Boolean =
 		soldiersStatuses.values.all { it == SoldierStatus.HEALTHY }
 
+	fun areAllSoldiersDead(): Boolean =
+		soldiersStatuses.values.all { it == SoldierStatus.DEAD }
+
 	fun byChangingSoldierStatus(soldier: Soldier, status: SoldierStatus): SoldiersStatuses {
 
 		val newSoldiersStatuses = soldiersStatuses.toMutableMap()
 		newSoldiersStatuses.put(soldier, status)
 		return SoldiersStatuses(newSoldiersStatuses)
 	}
+
 }

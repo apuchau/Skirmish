@@ -115,3 +115,4 @@ class SoldiersBattlePositions internal constructor(positions : Collection<Pair<S
 	}
 
 }
+
