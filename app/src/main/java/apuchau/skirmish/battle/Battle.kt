@@ -4,7 +4,9 @@ import apuchau.skirmish.army.Army
 import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.soldier.Soldier
 import apuchau.skirmish.soldier.SoldierStatus
-import com.natpryce.*
+import com.natpryce.Err
+import com.natpryce.Ok
+import com.natpryce.Result
 
 class Battle private constructor(private val battlefield: Battlefield,
 											private val armies: Set<Army>,
@@ -20,61 +22,42 @@ class Battle private constructor(private val battlefield: Battlefield,
 
 			val allSoldiers = armies.map { army -> army.soldiers }.flatten()
 
-			return checkEnoughArmies(armies)
-				.flatMap { checkAllArmiesHaveRepresentationInBattlefield(armies, soldiersPositions) }
-				.flatMap { checkSoldiersInBattlefieldBelongsToArmies(armies, soldiersPositions) }
-				.flatMap { checkPositionsAreInBattlefieldBounds(battlefield, soldiersPositions) }
-				.map { Battle(
+			return when {
+				!areThereEnoughArmies(armies) -> Err("Not enough armies to battle")
+				!doAllArmiesHaveRepresentationInBattlefield(armies, soldiersPositions) -> Err("Not all armies are represented in the battlefield")
+				!doAllSoldiersInBattlefieldBelongsToArmies(armies, soldiersPositions) -> Err("Not all soldiers in the battlefield belong to armies")
+				!areAllPositionsAreInBattlefieldBounds(battlefield, soldiersPositions) -> Err("Some positions are out of the battlefield bounds")
+				else -> Ok(Battle(
 					battlefield,
 					armies,
 					SoldiersStatuses.withAllHealthy(allSoldiers),
 					soldiersPositions,
-					SoldiersBattleActions.withAllDoingNothing(allSoldiers)) }
-		}
-
-		private fun checkEnoughArmies(armies: Set<Army>) : Result<Unit,String> {
-			return if (armies.size >= 2)
-				Ok(Unit)
-			else
-				Err("You need at least two armies to battle")
-		}
-
-		private fun checkAllArmiesHaveRepresentationInBattlefield(
-			armies: Set<Army>,
-			soldiersPositions: SoldiersBattlePositions)
-			: Result<Unit,String> {
-
-			return if (armies.all {
-				it.soldiers.any{ soldiersPositions.containsSoldier(it) }
-			}) {
-				Ok(Unit)
-			}
-			else {
-				Err("Not all armies are represented in the battlefield")
+					SoldiersBattleActions.withAllDoingNothing(allSoldiers)))
 			}
 		}
 
-		private fun checkSoldiersInBattlefieldBelongsToArmies(
+		private fun areThereEnoughArmies(armies: Set<Army>) = (armies.size >= 2)
+
+
+		private fun doAllArmiesHaveRepresentationInBattlefield(
 			armies: Set<Army>,
-			soldiersPositions: SoldiersBattlePositions)
-			: Result<Unit, String> {
+			soldiersPositions: SoldiersBattlePositions) =
 
-			return if (soldiersPositions.soldiers().all{ soldier -> armies.any{ it.containsSoldier(soldier) } })
-				Ok(Unit)
-			else
-				Err("Not all soldiers in the battlefield belong to armies")
-		}
+			armies.all { it.soldiers.any{ soldiersPositions.containsSoldier(it) } }
 
-		private fun checkPositionsAreInBattlefieldBounds(
+
+		private fun doAllSoldiersInBattlefieldBelongsToArmies(
+			armies: Set<Army>,
+			soldiersPositions: SoldiersBattlePositions) =
+
+			soldiersPositions.soldiers().all{ soldier -> armies.any{ it.containsSoldier(soldier) } }
+
+
+		private fun areAllPositionsAreInBattlefieldBounds(
 			battlefield: Battlefield,
-			soldiersPositions: SoldiersBattlePositions)
-			: Result<Unit,String> {
+			soldiersPositions: SoldiersBattlePositions) =
 
-			return if (soldiersPositions.areAllWithinBounds(battlefield.boundaries))
-				Ok(Unit)
-			else
-				Err("Some positions are out of the battlefield bounds")
-		}
+			soldiersPositions.areAllWithinBounds(battlefield.boundaries)
 	}
 
 	fun snapshot(): BattleSnapshot {

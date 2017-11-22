@@ -25,7 +25,7 @@ class BattleTests {
 			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
 				Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(1,1))
 			))),
-			"You need at least two armies to battle"
+			"Not enough armies to battle"
 		)
 	}
 
