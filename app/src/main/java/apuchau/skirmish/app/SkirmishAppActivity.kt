@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import apuchau.skirmish.app.text.BattleTextView
+import apuchau.skirmish.app.text.BattlefieldTextView
 import apuchau.skirmish.army.Army
 import apuchau.skirmish.battle.Battle
 import apuchau.skirmish.battle.SoldiersBattlePositions
@@ -20,7 +20,7 @@ import com.natpryce.onError
 class SkirmishAppActivity : Activity() {
 
 	private var battle : Battle? = null
-	private var battleView : BattleView? = null
+	private var battlefieldView: BattlefieldView? = null
 
 	private val KingArthur = Soldier(SoldierId("King Arthur"))
 	private val Mordred = Soldier(SoldierId("Mordred"))
@@ -65,16 +65,16 @@ class SkirmishAppActivity : Activity() {
 		layout.orientation = LinearLayout.VERTICAL
 		setContentView(layout)
 
-		val battleView = BattleTextView(this)
+		val battleView = BattlefieldTextView(this)
 		layout.addView(battleView)
 
-		this.battleView = battleView
+		this.battlefieldView = battleView
 	}
 
 	fun displayBattle() {
 
 		val battle = this.battle ?: return
-		this.battleView?.displayBattleSnapshot(battle.snapshot())
+		this.battlefieldView?.displayBattleSnapshot(battle.snapshot())
 	}
 
 	fun battlefieldPosition(x: Int, y: Int) =

@@ -4,7 +4,7 @@ import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import android.view.ViewGroup
 import android.widget.TextView
-import apuchau.skirmish.app.text.BattleTextView
+import apuchau.skirmish.app.text.BattlefieldTextView
 import apuchau.skirmish.battle.BattleSnapshot
 import apuchau.skirmish.battle.SoldiersBattleActions
 import apuchau.skirmish.battle.SoldiersBattlePositions
@@ -22,7 +22,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class BattleTextViewTests {
+class BattlefieldTextViewTests {
 
 	private val KingArthur = Soldier(SoldierId("King Arthur"))
 	private val Mordred = Soldier(SoldierId("Mordred"))
@@ -39,7 +39,7 @@ class BattleTextViewTests {
 		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(allSoldiers)
 		val battleSnapshot = BattleSnapshot(battlefield, soldiersStatuses, battlePositions, soldiersActions, BattleLog.empty())
 
-		val view = BattleTextView(context)
+		val view = BattlefieldTextView(context)
 		view.displayBattleSnapshot(snapshot = battleSnapshot)
 		view.setLayoutParams(ViewGroup.LayoutParams(100, 100))
 
@@ -65,7 +65,7 @@ class BattleTextViewTests {
 		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(allSoldiers)
 		val battleSnapshot = BattleSnapshot(battlefield, soldiersStatuses, battlePositions, soldiersActions, BattleLog.empty())
 
-		val view = BattleTextView(context)
+		val view = BattlefieldTextView(context)
 		view.displayBattleSnapshot(snapshot = battleSnapshot)
 		view.setLayoutParams(ViewGroup.LayoutParams(100,100))
 
@@ -78,7 +78,7 @@ class BattleTextViewTests {
 		assertViewContent(expectedStatusText, view)
 	}
 
-	private fun assertViewContent(expectedText: String, view: BattleView) {
+	private fun assertViewContent(expectedText: String, view: BattlefieldView) {
 		assertTrue(view is TextView)
 		assertEquals(expectedText, (view as TextView).text)
 	}

@@ -4,14 +4,14 @@ import android.content.Context
 import android.graphics.Typeface
 import android.util.TypedValue
 import android.widget.TextView
-import apuchau.skirmish.app.BattleView
+import apuchau.skirmish.app.BattlefieldView
 import apuchau.skirmish.battle.BattleSnapshot
 import apuchau.skirmish.battle.SoldiersBattlePositions
 import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.battlefield.BattlefieldBoundaries
 import apuchau.skirmish.battlefield.BattlefieldPosition
 
-class BattleTextView(context: Context?) : TextView(context), BattleView {
+class BattlefieldTextView(context: Context?) : TextView(context), BattlefieldView {
 
 	init {
 		this.setTypeface(Typeface.MONOSPACE)
