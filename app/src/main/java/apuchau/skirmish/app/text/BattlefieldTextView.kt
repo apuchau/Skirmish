@@ -35,9 +35,9 @@ class BattlefieldTextView(context: Context?) : TextView(context), BattlefieldVie
 
 		val boundaries = battlefield.boundaries
 
-		val topBorder = "┏" + "━".repeat(boundaries.width) + "┓\n"
+		val topBorder = "┏" + "-".repeat(boundaries.width) + "┓\n"
 		val emptyRow = "┃" + " ".repeat(boundaries.width) + "┃\n"
-		val bottomBorder = "┗" + "━".repeat(boundaries.width) + "┛\n"
+		val bottomBorder = "┗" + "-".repeat(boundaries.width) + "┛\n"
 
 		val rows = (1 .. boundaries.height).map { emptyRow }.joinToString("")
 

@@ -68,10 +68,10 @@ class BattlefieldTextViewTests {
 		view.setLayoutParams(ViewGroup.LayoutParams(100,100))
 
 		val expectedStatusText =
-			   "┏━━━┓\n"+
+			   "┏---┓\n"+
 				"┃   ┃\n"+
 				"┃SS ┃\n"+
-				"┗━━━┛\n"
+				"┗---┛\n"
 
 		assertViewContent(expectedStatusText, view)
 	}
