@@ -1,6 +1,7 @@
 package apuchau.skirmish.battle
 
 import apuchau.skirmish.army.Army
+import apuchau.skirmish.battle.log.BattleLog
 import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.soldier.Soldier
 import apuchau.skirmish.soldier.SoldierStatus
@@ -12,7 +13,8 @@ class Battle private constructor(private val battlefield: Battlefield,
 											private val armies: Set<Army>,
 											private var soldiersStatuses: SoldiersStatuses,
 											private val soldiersPositions: SoldiersBattlePositions,
-											private var soldiersActions: SoldiersBattleActions) {
+											private var soldiersActions: SoldiersBattleActions,
+											private var battleLog: BattleLog) {
 
 	companion object Factory {
 
@@ -32,7 +34,8 @@ class Battle private constructor(private val battlefield: Battlefield,
 					armies,
 					SoldiersStatuses.withAllHealthy(allSoldiers),
 					soldiersPositions,
-					SoldiersBattleActions.withAllDoingNothing(allSoldiers)))
+					SoldiersBattleActions.withAllDoingNothing(allSoldiers),
+					BattleLog.empty()))
 			}
 		}
 
@@ -61,7 +64,7 @@ class Battle private constructor(private val battlefield: Battlefield,
 	}
 
 	fun snapshot(): BattleSnapshot {
-		return BattleSnapshot(battlefield, soldiersStatuses, soldiersPositions, soldiersActions)
+		return BattleSnapshot(battlefield, soldiersStatuses, soldiersPositions, soldiersActions, battleLog)
 	}
 
 	override fun toString(): String {
@@ -85,8 +88,36 @@ class Battle private constructor(private val battlefield: Battlefield,
 			.map { soldier -> Pair(soldier, calculateSoldierAction(soldier)) }
 			.toList()
 
+		val logEntries = calculateLogEntries(actions)
+
 		soldiersActions = soldiersActions.byChangingSoldiersActions(actions)
+
+		battleLog = battleLog.byAddingEntries(logEntries)
 	}
+
+	private fun calculateLogEntries(actions: Collection<Pair<Soldier, SoldierAction>>): List<String> =
+
+		actions.map { soldierAndAction ->
+			calculateLogEntry(
+				soldierAndAction.first,
+				currentActionForSoldier(soldierAndAction.first),
+				soldierAndAction.second)
+			}
+			.filterNotNull()
+			.toList()
+
+	private fun currentActionForSoldier(soldier: Soldier): SoldierAction =
+
+		soldiersActions.actionForSoldier(soldier) ?: throw IllegalStateException("Soldier '${soldier}' doesn't have a current action")
+
+
+	private fun calculateLogEntry(soldier: Soldier, currentAction: SoldierAction, newAction: SoldierAction): String? =
+		when {
+			(currentAction == SoldierAction.DO_NOTHING
+				&& newAction == SoldierAction.FIGHT) -> "${soldier.soldierId.uniqueName} started fighting"
+
+			else -> null
+		}
 
 	private fun calculateSoldierAction(soldier: Soldier): SoldierAction {
 		return if (hasSoldierAdjacentEnemies(soldier)) {
@@ -124,10 +155,10 @@ class Battle private constructor(private val battlefield: Battlefield,
 		when(soldierStatus(soldier)) {
 			SoldierStatus.HEALTHY -> SoldierStatus.WOUNDED
 			SoldierStatus.WOUNDED -> SoldierStatus.DEAD
-			else -> SoldierStatus.DEAD
+			else -> throw IllegalStateException("Don't know how to process a hit to a soldier in status: ${soldierStatus(soldier)}")
 		}
 
 	private fun soldierStatus(soldier: Soldier) : SoldierStatus =
-		soldiersStatuses.soldierStatus(soldier) ?: SoldierStatus.HEALTHY
+		soldiersStatuses.soldierStatus(soldier) ?: throw IllegalStateException("Found soldier '${soldier} in battle with unknown status")
 
 }

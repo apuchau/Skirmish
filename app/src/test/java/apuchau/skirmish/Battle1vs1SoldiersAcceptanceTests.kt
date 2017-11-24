@@ -2,6 +2,7 @@ package apuchau.skirmish
 
 import apuchau.skirmish.army.Army
 import apuchau.skirmish.battle.*
+import apuchau.skirmish.battle.log.BattleLog
 import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.battlefield.BattlefieldBoundaries
 import apuchau.skirmish.battlefield.battlefieldPosition
@@ -45,6 +46,11 @@ class Battle1vs1SoldiersAcceptanceTests {
 			 .assertAllSoldiersBattling()
 			 .assertSoldierIsWounded(KingArthur)
 			 .assertSoldierIsWounded(Mordred)
+			 .assertLogEntries(
+				 listOf(
+					 "King Arthur started fighting",
+					 "Mordred started fighting"
+				 ))
 
 		 battle.timeCycle()
 
@@ -73,7 +79,8 @@ class Battle1vs1SoldiersAcceptanceTests {
 			battlefield,
 			soldiersStatuses,
 			startingBattlePositions,
-			startingSoldiersActions
+			startingSoldiersActions,
+			BattleLog.empty()
 		)
 
 		assertEquals(battle.snapshot(), expectedSnapshot)
@@ -86,7 +93,8 @@ class Battle1vs1SoldiersAcceptanceTests {
 			battlefield,
 			soldiersStatuses,
 			startingBattlePositions,
-			startingSoldiersActions
+			startingSoldiersActions,
+			BattleLog.empty()
 		)
 
 		assertEquals(battle.snapshot(), expectedSnapshot)

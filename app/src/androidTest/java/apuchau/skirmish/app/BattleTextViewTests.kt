@@ -9,6 +9,7 @@ import apuchau.skirmish.battle.BattleSnapshot
 import apuchau.skirmish.battle.SoldiersBattleActions
 import apuchau.skirmish.battle.SoldiersBattlePositions
 import apuchau.skirmish.battle.SoldiersStatuses
+import apuchau.skirmish.battle.log.BattleLog
 import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.battlefield.BattlefieldBoundaries
 import apuchau.skirmish.battlefield.BattlefieldPosition
@@ -36,7 +37,7 @@ class BattleTextViewTests {
 		val soldiersStatuses = SoldiersStatuses.withAllHealthy(allSoldiers)
 		val battlePositions = SoldiersBattlePositions(emptyList())
 		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(allSoldiers)
-		val battleSnapshot = BattleSnapshot(battlefield, soldiersStatuses, battlePositions, soldiersActions)
+		val battleSnapshot = BattleSnapshot(battlefield, soldiersStatuses, battlePositions, soldiersActions, BattleLog.empty())
 
 		val view = BattleTextView(context)
 		view.displayBattleSnapshot(snapshot = battleSnapshot)
@@ -62,7 +63,7 @@ class BattleTextViewTests {
 			Pair(Mordred, battlefieldPosition(2, 2))
 		))
 		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(allSoldiers)
-		val battleSnapshot = BattleSnapshot(battlefield, soldiersStatuses, battlePositions, soldiersActions)
+		val battleSnapshot = BattleSnapshot(battlefield, soldiersStatuses, battlePositions, soldiersActions, BattleLog.empty())
 
 		val view = BattleTextView(context)
 		view.displayBattleSnapshot(snapshot = battleSnapshot)

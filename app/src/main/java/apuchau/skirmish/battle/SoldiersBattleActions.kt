@@ -39,4 +39,6 @@ class SoldiersBattleActions private constructor(val actionsBySoldier : Map<Soldi
 			.map { entry -> entry.key }
 			.toSet()
 
+	fun actionForSoldier(soldier: Soldier): SoldierAction? = actionsBySoldier.get(soldier)
+
 }
