@@ -1,21 +1,19 @@
-package apuchau.skirmish.app
+package apuchau.skirmish.app.text
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import android.view.ViewGroup
 import android.widget.TextView
-import apuchau.skirmish.app.text.BattlefieldTextView
+import apuchau.skirmish.app.BattlefieldView
 import apuchau.skirmish.battle.BattleSnapshot
 import apuchau.skirmish.battle.SoldiersBattleActions
 import apuchau.skirmish.battle.SoldiersBattlePositions
 import apuchau.skirmish.battle.SoldiersStatuses
 import apuchau.skirmish.battle.log.BattleLog
-import apuchau.skirmish.battlefield.Battlefield
-import apuchau.skirmish.battlefield.BattlefieldBoundaries
-import apuchau.skirmish.battlefield.BattlefieldPosition
+import apuchau.skirmish.battlefield
+import apuchau.skirmish.battlefieldPosition
 import apuchau.skirmish.soldier.Soldier
 import apuchau.skirmish.soldier.SoldierId
-import com.natpryce.onError
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -33,7 +31,7 @@ class BattlefieldTextViewTests {
 	fun when_no_soldiers_in_battlefield__empty_battlefield_is_displayed() {
 
 		val context = InstrumentationRegistry.getTargetContext()
-		val battlefield = createBattlefield(3,2)
+		val battlefield = battlefield(3,2)
 		val soldiersStatuses = SoldiersStatuses.withAllHealthy(allSoldiers)
 		val battlePositions = SoldiersBattlePositions(emptyList())
 		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(allSoldiers)
@@ -56,7 +54,7 @@ class BattlefieldTextViewTests {
 	fun when_soldiers_in_battlefield__soldiers_and_battlefield_is_displayed() {
 
 		val context = InstrumentationRegistry.getTargetContext()
-		val battlefield = createBattlefield(3,2)
+		val battlefield = battlefield(3,2)
 		val soldiersStatuses = SoldiersStatuses.withAllHealthy(allSoldiers)
 		val battlePositions = SoldiersBattlePositions(listOf(
 			Pair(KingArthur, battlefieldPosition(1,2)),
@@ -82,14 +80,4 @@ class BattlefieldTextViewTests {
 		assertTrue(view is TextView)
 		assertEquals(expectedText, (view as TextView).text)
 	}
-
-	private fun createBattlefield(width: Int, height: Int): Battlefield {
-		return Battlefield(
-			BattlefieldBoundaries.create(width, height)
-				.onError { throw Exception("Invalid boundaries. ${it.reason}") })
-	}
-
-	private fun battlefieldPosition(x: Int, y: Int): BattlefieldPosition =
-		BattlefieldPosition.create(x,y).onError { throw Exception("Error creating battlefield position") }
-
 }
