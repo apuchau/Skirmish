@@ -63,12 +63,12 @@ class BattlefieldTextView(context: Context?) : TextView(context), BattlefieldVie
 		position: BattlefieldPosition) {
 
 		val positionInTxt = toPositionInText(position, battlefieldBoundaries)
-		battleTxt.replace(positionInTxt, positionInTxt+1, soldierCharForSoldier().toString())
+		battleTxt.replace(positionInTxt, positionInTxt+1, charForSoldier().toString())
 	}
 
 	private fun toPositionInText(position: BattlefieldPosition, battlefieldBoundaries: BattlefieldBoundaries): Int {
 		return (position.y * (battlefieldBoundaries.width+2+1)) + position.x
 	}
 
-	private fun soldierCharForSoldier(): Char = 'S'
+	private fun charForSoldier(): Char = 'S'
 }
