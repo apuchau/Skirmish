@@ -73,20 +73,19 @@ class Battle private constructor(private val battlefield: Battlefield,
 
 
 	fun timeCycle() {
-		putAdjacentSoldiersToFight()
+		reevaluateSoldiersActions()
 		resolveFighting()
 	}
 
-	private fun putAdjacentSoldiersToFight() {
+	private fun reevaluateSoldiersActions() {
 
-		armies.forEach { army ->
-			army.soldiers.forEach {
-				soldier ->
-					this.soldiersActions = this.soldiersActions.byChangingSoldiersActions(
-						listOf(Pair(soldier, calculateSoldierAction(soldier)))
-					)
-			}
-		}
+		val actions = armies
+			.map { army -> army.soldiers }
+			.flatten()
+			.map { soldier -> Pair(soldier, calculateSoldierAction(soldier)) }
+			.toList()
+
+		soldiersActions = soldiersActions.byChangingSoldiersActions(actions)
 	}
 
 	private fun calculateSoldierAction(soldier: Soldier): SoldierAction {
