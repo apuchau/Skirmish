@@ -14,7 +14,7 @@ import apuchau.skirmish.battlefield.BattlefieldPosition
 class BattlefieldTextView(context: Context?) : TextView(context), BattlefieldView {
 
 	init {
-		this.setTypeface(Typeface.MONOSPACE)
+		setTypeface(Typeface.createFromAsset(context?.resources?.assets, "fonts/F25_Bank_Printer.ttf"))
 		this.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40F)
 	}
 
