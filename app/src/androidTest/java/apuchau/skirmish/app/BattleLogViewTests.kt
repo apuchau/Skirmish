@@ -1,11 +1,10 @@
-package apuchau.skirmish
+package apuchau.skirmish.app
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import apuchau.skirmish.app.BattleLogView
 import apuchau.skirmish.battle.log.BattleLog
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
