@@ -40,6 +40,7 @@ class BattlefieldTextViewTests {
 		val view = BattlefieldTextView(context)
 		view.displayBattleSnapshot(snapshot = battleSnapshot)
 		view.setLayoutParams(ViewGroup.LayoutParams(100, 100))
+		view.displayBattleSnapshot(snapshot = battleSnapshot)
 
 		val expectedStatusText =
 			"┏━━━┓\n"+
