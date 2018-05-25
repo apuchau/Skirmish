@@ -20,8 +20,6 @@ class BattlefieldTextView(context: Context?) : TextView(context), BattlefieldVie
 		paint.setAntiAlias(false)
 		setBackgroundColor(Color.WHITE)
 		setTextColor(Color.BLACK)
-		width = 500
-		height = 500
 	}
 
 	override fun displayBattleSnapshot(snapshot: BattleSnapshot) {

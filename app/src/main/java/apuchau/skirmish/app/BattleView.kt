@@ -15,13 +15,18 @@ class BattleView(context: Context?) : LinearLayout(context) {
 		orientation = LinearLayout.VERTICAL
 
 		battlefieldView = BattlefieldTextView(context)
+		battlefieldView.width = 1000
+		battlefieldView.height = 500
 		addView(battlefieldView)
 
 		battleLogView = BattleLogView(context)
+		battleLogView.width = 1000
+		battleLogView.height = 300
 		addView(battleLogView)
 	}
 
 	fun displayBattleSnapshot(snapshot: BattleSnapshot) {
 		battlefieldView.displayBattleSnapshot(snapshot)
+		battleLogView.displayBattleLog(snapshot.battleLog)
 	}
 }

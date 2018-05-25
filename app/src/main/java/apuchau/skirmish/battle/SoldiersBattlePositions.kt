@@ -114,5 +114,7 @@ class SoldiersBattlePositions internal constructor(positions : Collection<Pair<S
 		soldiersAndPositions.forEach(fn)
 	}
 
+	fun <T> map(fn: (Pair<Soldier, BattlefieldPosition>) -> T) : List<T> =
+		soldiersAndPositions.map(fn)
 }
 

@@ -3,6 +3,7 @@ package apuchau.skirmish.battle
 import apuchau.skirmish.army.Army
 import apuchau.skirmish.battle.log.BattleLog
 import apuchau.skirmish.battlefield.Battlefield
+import apuchau.skirmish.battlefield.BattlefieldPosition
 import apuchau.skirmish.soldier.Soldier
 import apuchau.skirmish.soldier.SoldierStatus
 import com.natpryce.Err
@@ -35,7 +36,7 @@ class Battle private constructor(private val battlefield: Battlefield,
 					SoldiersStatuses.withAllHealthy(allSoldiers),
 					soldiersPositions,
 					SoldiersBattleActions.withAllDoingNothing(allSoldiers),
-					BattleLog.empty()))
+					battleLogForBattleStart(soldiersPositions)))
 			}
 		}
 
@@ -61,6 +62,14 @@ class Battle private constructor(private val battlefield: Battlefield,
 			soldiersPositions: SoldiersBattlePositions) =
 
 			soldiersPositions.areAllWithinBounds(battlefield.boundaries)
+
+		private fun battleLogForBattleStart(soldiersPositions: SoldiersBattlePositions): BattleLog =
+			BattleLog.withEntries( soldiersPositions.map { logEntryForStartingPosition(it) } )
+
+		private fun logEntryForStartingPosition(soldierBattlePosition: Pair<Soldier, BattlefieldPosition>): String {
+			return """Soldier ${soldierBattlePosition.first.soldierId.uniqueName} starts at position (${soldierBattlePosition.second.x}, ${soldierBattlePosition.second.y})"""
+		}
+
 	}
 
 	fun snapshot(): BattleSnapshot {

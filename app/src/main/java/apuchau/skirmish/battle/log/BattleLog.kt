@@ -4,6 +4,7 @@ class BattleLog private constructor(private val logEntries : List<String>) {
 
 	companion object Factory {
 		fun empty() : BattleLog = BattleLog(emptyList())
+		fun withEntries(entries: List<String>): BattleLog = BattleLog(entries)
 	}
 
 	fun byAddingEntries(logEntries: List<String>): BattleLog {

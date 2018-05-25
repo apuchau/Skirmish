@@ -14,8 +14,6 @@ class BattleLogView(context: Context?) : TextView(context) {
 		setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)
 		setBackgroundColor(Color.WHITE)
 		setTextColor(Color.BLACK)
-		width = 500
-		height = 200
 	}
 
 	fun displayBattleLog(battleLog: BattleLog) {

@@ -25,8 +25,8 @@ class SkirmishAppActivityTests {
 	@Test
 	fun when_started_activity_displays_battlefield_with_arthur_and_mordred_then_log() {
 
-		val expectedContent = readTestImage("battlefield_500x700_battlefield_arthur_mordred_then_log.png")
-		val viewContent = mainView().rgb8Content().crop(0, 0, 500, 700)
+		val expectedContent = readTestImage("battlefield_1000x800_battlefield_arthur_mordred_then_log.png")
+		val viewContent = mainView().rgb8Content().crop(0, 0, 1000, 800)
 
 		assertBitmaps(expectedContent, viewContent)
 	}
