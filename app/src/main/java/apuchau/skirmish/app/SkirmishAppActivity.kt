@@ -4,9 +4,7 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.LinearLayout
-import apuchau.skirmish.app.view.takeSnapshot
 import apuchau.skirmish.army.Army
 import apuchau.skirmish.battle.Battle
 import apuchau.skirmish.battle.SoldiersBattlePositions
@@ -65,28 +63,16 @@ class SkirmishAppActivity : Activity() {
 		layout.layoutParams = ViewGroup.LayoutParams(rootView.width, rootView.height)
 		layout.orientation = LinearLayout.VERTICAL
 
-		val battleView = BattleView(this)
+		battleView = BattleView(this)
 		setContentView(battleView)
-
-		this.battleView = battleView
 	}
 
 	fun displayBattle() {
 
 		val battle = this.battle ?: return
-		val battleView = this.battleView
+		val battleView = this.battleView ?: return
 
-		battleView?.displayBattleSnapshot(battle.snapshot())
-
-		if (battleView != null) {
-
-			(battleView as View).getViewTreeObserver().addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
-				override fun onGlobalLayout() {
-					battleView.getViewTreeObserver().removeOnGlobalLayoutListener(this)
-					(battleView as View).takeSnapshot(applicationContext, "battleview screenshot.png")
-				}
-			})
-		}
+		battleView.displayBattleSnapshot(battle.snapshot())
 	}
 
 	fun battlefieldPosition(x: Int, y: Int) =

@@ -15,13 +15,13 @@ class BattleViewTests {
 	@Test
 	fun battleView_contains_battlefieldView_and_logView() {
 
-		val battleView = BattleView(context())
+		val battleView = BattleView(targetContext())
 
 		assertEquals("Subviews", 2, battleView.subviews().size)
 		assertTrue(battleView.subviews().get(0) is BattlefieldView)
 		assertTrue(battleView.subviews().get(1) is BattleLogView)
 	}
 
-	private fun context(): Context? = InstrumentationRegistry.getTargetContext()
+	private fun targetContext(): Context? = InstrumentationRegistry.getTargetContext()
 
 }
