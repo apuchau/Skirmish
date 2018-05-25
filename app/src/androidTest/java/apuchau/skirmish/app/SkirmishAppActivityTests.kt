@@ -1,19 +1,20 @@
 package apuchau.skirmish.app
 
+import android.R
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.support.test.InstrumentationRegistry
 import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import android.view.View
+import apuchau.skirmish.app.assets.readImageAsset
 import apuchau.skirmish.app.view.crop
 import apuchau.skirmish.app.view.rgb8Content
-import org.junit.Assert
+import com.natpryce.onError
+import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-
 
 @RunWith(AndroidJUnit4::class)
 class SkirmishAppActivityTests {
@@ -24,42 +25,26 @@ class SkirmishAppActivityTests {
 	@Test
 	fun when_started_activity_displays_battlefield_with_arthur_and_mordred_then_log() {
 
-		val view = activityRule.activity.findViewById<View>(android.R.id.content)
+		val expectedContent = readTestImage("battlefield_500x700_battlefield_arthur_mordred_then_log.png")
+		val viewContent = mainView().rgb8Content().crop(0, 0, 500, 700)
 
-		val expectedContent = readImage("battlefield_500x700_battlefield_arthur_mordred_then_log.png")
-		val viewContent = view.rgb8Content().crop(0, 0, 500, 700)
 		assertBitmaps(expectedContent, viewContent)
 	}
 
-	private fun readImage(imagePath: String): Bitmap {
-
-		val ctx= InstrumentationRegistry.getContext()
-		val inStream=
-			ctx.resources?.assets?.open("apuchau/skirmish/app/${imagePath}")
-
-		if (inStream == null) {
-			throw IllegalStateException("Required image ${imagePath} not found")
-		}
-
-		try {
-			return BitmapFactory.decodeStream(inStream)
-				?: throw IllegalStateException("Error reading the image '${imagePath}'")
-		} finally {
-			inStream.close()
-		}
-	}
+	private fun readTestImage(imagePath: String): Bitmap =
+		context().readImageAsset(imagePath).onError { throw Exception("Error getting test image: $imagePath") }
 
 	private fun assertBitmaps(expectedBitmap: Bitmap, bitmap: Bitmap) {
 
-		Assert.assertEquals("width", expectedBitmap.width, bitmap.width)
-		Assert.assertEquals("height", expectedBitmap.height, bitmap.height)
+		assertEquals("width", expectedBitmap.width, bitmap.width)
+		assertEquals("height", expectedBitmap.height, bitmap.height)
 
 		for (x in 0 until expectedBitmap.width) {
 			for (y in 0 until expectedBitmap.height) {
 				val expectedColor = expectedBitmap.getPixel(x, y)
 				val color = bitmap.getPixel(x, y)
 
-				Assert.assertEquals("Pixel colour at ($x,$y)", toRGB(expectedColor), toRGB(color))
+				assertEquals("Pixel colour at ($x,$y)", toRGB(expectedColor), toRGB(color))
 			}
 		}
 	}
@@ -68,5 +53,7 @@ class SkirmishAppActivityTests {
 		return Integer.toHexString(pixelValue)
 	}
 
-	private fun context(): Context? = InstrumentationRegistry.getTargetContext()
+	private fun context(): Context = InstrumentationRegistry.getContext()
+
+	private fun mainView() : View = activityRule.activity.findViewById<View>(R.id.content)
 }
