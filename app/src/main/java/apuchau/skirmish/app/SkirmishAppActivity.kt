@@ -4,8 +4,9 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.LinearLayout
-import apuchau.skirmish.app.text.BattlefieldTextView
+import apuchau.skirmish.app.view.takeSnapshot
 import apuchau.skirmish.army.Army
 import apuchau.skirmish.battle.Battle
 import apuchau.skirmish.battle.SoldiersBattlePositions
@@ -20,7 +21,7 @@ import com.natpryce.onError
 class SkirmishAppActivity : Activity() {
 
 	private var battle : Battle? = null
-	private var battlefieldView: BattlefieldView? = null
+	private var battleView: BattleView? = null
 
 	private val KingArthur = Soldier(SoldierId("King Arthur"))
 	private val Mordred = Soldier(SoldierId("Mordred"))
@@ -60,21 +61,32 @@ class SkirmishAppActivity : Activity() {
 		val rootView : View = getWindow().getDecorView().getRootView()
 
 		val layout = LinearLayout(this)
-		layout.layout(5, 5, 5, 5)
+		layout.layout(0, 0, 0, 0)
 		layout.layoutParams = ViewGroup.LayoutParams(rootView.width, rootView.height)
 		layout.orientation = LinearLayout.VERTICAL
-		setContentView(layout)
 
-		val battleView = BattlefieldTextView(this)
-		layout.addView(battleView)
+		val battleView = BattleView(this)
+		setContentView(battleView)
 
-		this.battlefieldView = battleView
+		this.battleView = battleView
 	}
 
 	fun displayBattle() {
 
 		val battle = this.battle ?: return
-		this.battlefieldView?.displayBattleSnapshot(battle.snapshot())
+		val battleView = this.battleView
+
+		battleView?.displayBattleSnapshot(battle.snapshot())
+
+		if (battleView != null) {
+
+			(battleView as View).getViewTreeObserver().addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+				override fun onGlobalLayout() {
+					battleView.getViewTreeObserver().removeOnGlobalLayoutListener(this)
+					(battleView as View).takeSnapshot(applicationContext, "battleview screenshot.png")
+				}
+			})
+		}
 	}
 
 	fun battlefieldPosition(x: Int, y: Int) =

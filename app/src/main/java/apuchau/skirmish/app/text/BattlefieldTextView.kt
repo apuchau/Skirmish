@@ -1,6 +1,7 @@
 package apuchau.skirmish.app.text
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Typeface
 import android.util.TypedValue
 import android.widget.TextView
@@ -15,7 +16,12 @@ class BattlefieldTextView(context: Context?) : TextView(context), BattlefieldVie
 
 	init {
 		setTypeface(Typeface.createFromAsset(context?.resources?.assets, "fonts/F25_Bank_Printer.ttf"))
-		this.setTextSize(TypedValue.COMPLEX_UNIT_SP, 40F)
+		setTextSize(TypedValue.COMPLEX_UNIT_SP, 40F)
+		paint.setAntiAlias(false)
+		setBackgroundColor(Color.WHITE)
+		setTextColor(Color.BLACK)
+		width = 500
+		height = 500
 	}
 
 	override fun displayBattleSnapshot(snapshot: BattleSnapshot) {

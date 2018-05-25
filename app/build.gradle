@@ -6,7 +6,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "apuchau.skirmish"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -23,7 +23,7 @@ android {
         test.java.srcDirs += 'src/test/java'
         androidTest.java.srcDirs += 'src/androidTest/kotlin'
     }
-    buildToolsVersion '27.0.0'
+    buildToolsVersion '27.0.3'
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_6
         targetCompatibility JavaVersion.VERSION_1_6
@@ -32,11 +32,12 @@ android {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "com.natpryce:result4k:1.4.1"
     testCompile 'com.willowtreeapps.assertk:assertk:0.9'
     testCompile "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestCompile 'com.android.support.test:runner:1.0.2'
+    androidTestCompile 'com.android.support.test:rules:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 }
