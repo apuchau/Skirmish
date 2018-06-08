@@ -39,17 +39,18 @@ class SkirmishAppActivityTests {
 		assertEquals("width", expectedBitmap.width, bitmap.width)
 		assertEquals("height", expectedBitmap.height, bitmap.height)
 
-		for (x in 0 until expectedBitmap.width) {
-			for (y in 0 until expectedBitmap.height) {
+		(0 until expectedBitmap.width).forEach { x ->
+			(0 until expectedBitmap.height).forEach { y ->
+
 				val expectedColor = expectedBitmap.getPixel(x, y)
 				val color = bitmap.getPixel(x, y)
 
-				assertEquals("Pixel colour at ($x,$y)", toRGB(expectedColor), toRGB(color))
+				assertEquals("Pixel colour at ($x,$y)", toRGBString(expectedColor), toRGBString(color))
 			}
 		}
 	}
 
-	private fun toRGB(pixelValue: Int): String {
+	private fun toRGBString(pixelValue: Int): String {
 		return Integer.toHexString(pixelValue)
 	}
 
