@@ -8,7 +8,10 @@ import apuchau.skirmish.battlefield.battlefieldPosition
 import apuchau.skirmish.soldier.Soldier
 import apuchau.skirmish.soldier.SoldierId
 import com.natpryce.onError
+import com.natpryce.valueOrNull
 import org.junit.Test
+import kotlin.test.assertEquals
+import kotlin.test.fail
 
 class BattleTests {
 
@@ -92,7 +95,6 @@ class BattleTests {
 		)
 	}
 
-
 	@Test
 	fun soldier_can_be_positioned_in_battlefield_edge__no_error_thrown() {
 
@@ -103,10 +105,22 @@ class BattleTests {
 			createArmy("Army B", setOf(Soldier(SoldierId("SoldierB1"))))
 		)
 
-		Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
-			Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(3,1)),
-			Pair(Soldier(SoldierId("SoldierB1")), battlefieldPosition(1,5))
-		)))
+		val result =
+			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
+				Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(3,1)),
+				Pair(Soldier(SoldierId("SoldierB1")), battlefieldPosition(1,5))
+			)))
+
+		result.onError { fail("Battle with soldiers in battlefield edge is allowed, but has failed creation") }
+
+		val expectedSoldiersPositions = SoldiersBattlePositions.create(listOf(
+				Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(3,1)),
+				Pair(Soldier(SoldierId("SoldierB1")), battlefieldPosition(1,5))))
+
+		assertEquals(
+			expectedSoldiersPositions.valueOrNull(),
+			result.valueOrNull()?.snapshot()?.soldiersBattlePositions,
+			"Soldiers in the battle")
 	}
 
 
