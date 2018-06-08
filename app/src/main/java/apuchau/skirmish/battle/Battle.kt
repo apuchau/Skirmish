@@ -1,5 +1,6 @@
 package apuchau.skirmish.battle
 
+import apuchau.kotlin.InvalidState
 import apuchau.skirmish.army.Army
 import apuchau.skirmish.battle.fight.AttackResult
 import apuchau.skirmish.battle.log.BattleLog
@@ -95,36 +96,32 @@ class Battle private constructor(private val battlefield: Battlefield,
 		val actions = armies
 			.map { army -> army.soldiers }
 			.flatten()
-			.map { soldier -> Pair(soldier, calculateSoldierAction(soldier)) }
+			.map { soldier -> ActionCalculationResult(
+				soldier, currentActionForSoldier(soldier), calculateSoldierAction(soldier)) }
 			.toList()
 
 		val logEntries = calculateLogEntries(actions)
 
-		soldiersActions = soldiersActions.byChangingSoldiersActions(actions)
+		actions.forEach {
+			soldiersActions = soldiersActions.byChangingSoldierAction(it.soldier, it.newAction) }
 
 		battleLog = battleLog.byAddingEntries(logEntries)
 	}
 
-	private fun calculateLogEntries(actions: Collection<Pair<Soldier, SoldierAction>>): List<String> =
+	private fun calculateLogEntries(actionsResult: Collection<ActionCalculationResult>): List<String> =
 
-		actions.map { soldierAndAction ->
-			calculateLogEntry(
-				soldierAndAction.first,
-				currentActionForSoldier(soldierAndAction.first),
-				soldierAndAction.second)
-			}
+		actionsResult.map { calculateLogEntry(it) }
 			.filterNotNull()
 			.toList()
 
 	private fun currentActionForSoldier(soldier: Soldier): SoldierAction =
 
-		soldiersActions.actionForSoldier(soldier) ?: throw IllegalStateException("Soldier '${soldier}' doesn't have a current action")
+		soldiersActions.actionForSoldier(soldier) ?: throw InvalidState("Soldier '${soldier}' doesn't have a current action")
 
-
-	private fun calculateLogEntry(soldier: Soldier, currentAction: SoldierAction, newAction: SoldierAction): String? =
+	private fun calculateLogEntry(actionResult: ActionCalculationResult): String? =
 		when {
-			(currentAction == SoldierAction.DO_NOTHING
-				&& newAction == SoldierAction.FIGHT) -> "${soldier.soldierId.uniqueName} started fighting"
+			(actionResult.currentAction == SoldierAction.DO_NOTHING
+				&& actionResult.newAction == SoldierAction.FIGHT) -> "${actionResult.soldier.soldierId.uniqueName} started fighting"
 
 			else -> null
 		}
