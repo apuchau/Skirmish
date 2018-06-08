@@ -67,7 +67,7 @@ class Battle private constructor(private val battlefield: Battlefield,
 			BattleLog.withEntries( soldiersPositions.map { logEntryForStartingPosition(it) } )
 
 		private fun logEntryForStartingPosition(soldierBattlePosition: Pair<Soldier, BattlefieldPosition>): String {
-			return """Soldier ${soldierBattlePosition.first.soldierId.uniqueName} starts at position (${soldierBattlePosition.second.x}, ${soldierBattlePosition.second.y})"""
+			return "Soldier ${soldierBattlePosition.first.soldierId.uniqueName} starts at position (${soldierBattlePosition.second.x}, ${soldierBattlePosition.second.y})"
 		}
 
 	}

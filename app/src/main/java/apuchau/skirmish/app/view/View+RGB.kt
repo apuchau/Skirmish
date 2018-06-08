@@ -7,7 +7,7 @@ import android.view.View
 fun View.rgb8Content() : Bitmap {
 	val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
 	val c = Canvas(bitmap)
-	this.layout(getLeft(), getTop(), getRight(), getBottom())
-	this.draw(c)
+	layout(getLeft(), getTop(), getRight(), getBottom())
+	draw(c)
 	return bitmap
 }
