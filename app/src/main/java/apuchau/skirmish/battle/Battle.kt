@@ -93,12 +93,9 @@ class Battle private constructor(private val battlefield: Battlefield,
 
 	private fun reevaluateSoldiersActions() {
 
-		val actionsCalculationResult = armies
-			.map { army -> army.soldiers }
-			.flatten()
-			.filter { soldier -> isAlive(soldier) }
-			.map { soldier -> ActionCalculationResult(
-				soldier, currentActionForSoldier(soldier), calculateSoldierAction(soldier)) }
+		val actionsCalculationResult =
+			allLiveSoldiers()
+			.map { soldier -> newSoldierAction(soldier) }
 			.toList()
 
 		actionsCalculationResult.forEach {
@@ -106,6 +103,16 @@ class Battle private constructor(private val battlefield: Battlefield,
 		}
 
 		battleLog = battleLog.byAddingEntries(calculateLogEntries(actionsCalculationResult))
+	}
+
+	private fun newSoldierAction(soldier: Soldier) =
+		ActionCalculationResult(soldier, currentActionForSoldier(soldier), calculateSoldierAction(soldier))
+
+	private fun allLiveSoldiers(): List<Soldier> {
+		return armies
+			.map { army -> army.soldiers }
+			.flatten()
+			.filter { soldier -> isAlive(soldier) }
 	}
 
 	private fun calculateLogEntries(actionsResult: Collection<ActionCalculationResult>): List<String> =
