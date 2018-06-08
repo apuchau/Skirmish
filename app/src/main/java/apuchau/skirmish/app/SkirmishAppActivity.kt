@@ -14,6 +14,8 @@ import apuchau.skirmish.battlefield.BattlefieldPosition
 import apuchau.skirmish.soldier.Soldier
 import apuchau.skirmish.soldier.SoldierId
 import com.natpryce.onError
+import java.util.*
+import kotlin.concurrent.timerTask
 
 
 class SkirmishAppActivity : Activity() {
@@ -28,7 +30,7 @@ class SkirmishAppActivity : Activity() {
 		super.onCreate(savedInstanceState)
 		createBattle()
 		createBattleView()
-		displayBattle()
+		startBattle()
 	}
 
 	private fun createBattle() {
@@ -67,12 +69,28 @@ class SkirmishAppActivity : Activity() {
 		setContentView(battleView)
 	}
 
+	private fun startBattle() {
+		displayBattle()
+		startBattleCycleTimer()
+	}
+
+	private fun startBattleCycleTimer() {
+		Timer("SkimishAppBattleTimeCycle", true).scheduleAtFixedRate(
+			timerTask({ battleTimerTick() }),
+			0, 1000)
+	}
+
+	private fun battleTimerTick() {
+		processBattleCycle()
+		displayBattle()
+	}
+
+	private fun processBattleCycle() {
+		battle?.timeCycle()
+	}
+
 	fun displayBattle() {
-
-		val battle = this.battle ?: return
-		val battleView = this.battleView ?: return
-
-		battleView.displayBattleSnapshot(battle.snapshot())
+		battle?.let { battleView?.displayBattleSnapshot(it.snapshot()) }
 	}
 
 	fun battlefieldPosition(x: Int, y: Int) =

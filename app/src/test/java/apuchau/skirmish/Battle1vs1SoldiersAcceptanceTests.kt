@@ -64,7 +64,8 @@ class Battle1vs1SoldiersAcceptanceTests {
 		 battle.timeCycle()
 
 		 assertBattleSnapshot(battle.snapshot())
-			 .assertAllSoldiersDead()
+			 .assertSoldierIsWounded(KingArthur)
+			 .assertSoldierIsDead(Mordred)
 			 .assertLog(
 				 listOf(
 					 "Soldier King Arthur starts at position (1, 1)",
@@ -73,8 +74,26 @@ class Battle1vs1SoldiersAcceptanceTests {
 					 "Mordred started fighting",
 					 "King Arthur hit Mordred who is now WOUNDED",
 					 "Mordred hit King Arthur who is now WOUNDED",
-					 "King Arthur hit Mordred who is now DEAD",
-					 "Mordred hit King Arthur who is now DEAD"
+					 "King Arthur hit Mordred who is now DEAD"
+				 ))
+
+		 // After a cycle nothing should change, dead people shouldn't fight and
+		 //  alive people shouldn't hit to dead people
+
+		 battle.timeCycle()
+
+		 assertBattleSnapshot(battle.snapshot())
+			 .assertSoldierIsWounded(KingArthur)
+			 .assertSoldierIsDead(Mordred)
+			 .assertLog(
+				 listOf(
+					 "Soldier King Arthur starts at position (1, 1)",
+					 "Soldier Mordred starts at position (2, 1)",
+					 "King Arthur started fighting",
+					 "Mordred started fighting",
+					 "King Arthur hit Mordred who is now WOUNDED",
+					 "Mordred hit King Arthur who is now WOUNDED",
+					 "King Arthur hit Mordred who is now DEAD"
 				 ))
     }
 

@@ -23,12 +23,17 @@ class SkirmishAppActivityTests {
 	val activityRule = ActivityTestRule<SkirmishAppActivity>(SkirmishAppActivity::class.java)
 
 	@Test
-	fun when_started_activity_displays_battlefield_with_arthur_and_mordred_then_log() {
+	fun after_some_cycles_of_battle_displays_battlefield_with_arthur_and_mordred_in_battlefield_and_battle_log() {
 
-		val expectedContent = readTestImage("battlefield_1000x800_battlefield_arthur_mordred_then_log.png")
-		val viewContent = mainView().rgb8Content().crop(0, 0, 1000, 800)
+		waitForThreeBattleCycles()
+		val expectedContent = readTestImage("battlefield_1000x1200_battlefield_arthur_mordred_then_log.png")
+		val viewContent = mainView().rgb8Content().crop(0, 0,1000,1200)
 
 		assertBitmaps(expectedContent, viewContent)
+	}
+
+	private fun waitForThreeBattleCycles() {
+		Thread.sleep(3000)
 	}
 
 	private fun readTestImage(imagePath: String): Bitmap =
@@ -42,8 +47,8 @@ class SkirmishAppActivityTests {
 		(0 until expectedBitmap.width).forEach { x ->
 			(0 until expectedBitmap.height).forEach { y ->
 
-				val expectedColor = expectedBitmap.getPixel(x, y)
-				val color = bitmap.getPixel(x, y)
+				val expectedColor= expectedBitmap.getPixel(x, y)
+				val color= bitmap.getPixel(x, y)
 
 				assertEquals("Pixel colour at ($x,$y)", toRGBString(expectedColor), toRGBString(color))
 			}

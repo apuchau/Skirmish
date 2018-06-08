@@ -79,7 +79,7 @@ class Battle private constructor(private val battlefield: Battlefield,
 	}
 
 	override fun toString(): String {
-		return "Battle. Battlefield: $battlefield, Armies: $armies, Positions: $soldiersPositions"
+		return "Battle. Battlefield: $battlefield, Armies: $armies, Positions: $soldiersPositions, Statuses: ${soldiersStatuses}"
 	}
 
 	private fun armyOf(soldier: Soldier): Army =
@@ -93,19 +93,19 @@ class Battle private constructor(private val battlefield: Battlefield,
 
 	private fun reevaluateSoldiersActions() {
 
-		val actions = armies
+		val actionsCalculationResult = armies
 			.map { army -> army.soldiers }
 			.flatten()
+			.filter { soldier -> isAlive(soldier) }
 			.map { soldier -> ActionCalculationResult(
 				soldier, currentActionForSoldier(soldier), calculateSoldierAction(soldier)) }
 			.toList()
 
-		val logEntries = calculateLogEntries(actions)
+		actionsCalculationResult.forEach {
+			soldiersActions = soldiersActions.byChangingSoldierAction(it.soldier, it.newAction)
+		}
 
-		actions.forEach {
-			soldiersActions = soldiersActions.byChangingSoldierAction(it.soldier, it.newAction) }
-
-		battleLog = battleLog.byAddingEntries(logEntries)
+		battleLog = battleLog.byAddingEntries(calculateLogEntries(actionsCalculationResult))
 	}
 
 	private fun calculateLogEntries(actionsResult: Collection<ActionCalculationResult>): List<String> =
@@ -127,7 +127,7 @@ class Battle private constructor(private val battlefield: Battlefield,
 		}
 
 	private fun calculateSoldierAction(soldier: Soldier): SoldierAction {
-		return if (hasSoldierAdjacentEnemies(soldier)) {
+		return if (hasAdjacentEnemiesAlive(soldier)) {
 			SoldierAction.FIGHT
 		}
 		else {
@@ -135,8 +135,10 @@ class Battle private constructor(private val battlefield: Battlefield,
 		}
 	}
 
-	private fun hasSoldierAdjacentEnemies(soldier: Soldier): Boolean =
-		enemiesAdjacentTo(soldier).isNotEmpty()
+	private fun hasAdjacentEnemiesAlive(soldier: Soldier): Boolean =
+		enemiesAdjacentTo(soldier)
+			.filter { adjacentSoldier -> isAlive(adjacentSoldier) }
+			.isNotEmpty()
 
 	private fun enemiesAdjacentTo(soldier: Soldier): Set<Soldier> =
 		soldiersPositions.soldiersAdjacentToSoldier(soldier)
@@ -148,19 +150,23 @@ class Battle private constructor(private val battlefield: Battlefield,
 
 	private fun resolveFighting() {
 		soldiersActions.soldiersThatAreFighting()
-			.forEach { soldier -> resolveAttacks(soldier) }
+			.forEach { soldier -> resolveAttacksOf(soldier) }
 	}
 
-	private fun resolveAttacks(soldier: Soldier) {
+	private fun resolveAttacksOf(soldier: Soldier) {
 
-		val attackResults = enemiesAdjacentTo(soldier)
-			.map { adjacentSoldier -> resolveAttack(soldier, adjacentSoldier) }
+		if (isAlive(soldier)) {
+			val attackResults = enemiesAdjacentTo(soldier)
+				.filter { adjacentSoldier -> isAlive(adjacentSoldier) }
+				.map { adjacentSoldier -> resolveAttack(soldier, adjacentSoldier) }
 
-		attackResults.forEach { attachResult ->
-			soldiersStatuses = soldiersStatuses.byChangingSoldierStatus(attachResult.defender, attachResult.newDefenderStatus)}
+			attackResults.forEach { attachResult ->
+				soldiersStatuses = soldiersStatuses.byChangingSoldierStatus(attachResult.defender, attachResult.newDefenderStatus)
+			}
 
-		val logEntries = attackResults.map { logEntryForAttack(it) }
-		battleLog = battleLog.byAddingEntries(logEntries)
+			val logEntries = attackResults.map { logEntryForAttack(it) }
+			battleLog = battleLog.byAddingEntries(logEntries)
+		}
 	}
 
 	private fun resolveAttack(attacker: Soldier, defender: Soldier): AttackResult =
@@ -170,13 +176,15 @@ class Battle private constructor(private val battlefield: Battlefield,
 		when(soldierStatus(soldier)) {
 			SoldierStatus.HEALTHY -> SoldierStatus.WOUNDED
 			SoldierStatus.WOUNDED -> SoldierStatus.DEAD
-			else -> throw IllegalStateException("Don't know how to process a hit to a soldier in status: ${soldierStatus(soldier)}")
+			SoldierStatus.DEAD -> SoldierStatus.DEAD
 		}
 
 	private fun logEntryForAttack(attackResult: AttackResult): String =
 		"${attackResult.attacker.soldierId.uniqueName} hit ${attackResult.defender.soldierId.uniqueName} who is now ${attackResult.newDefenderStatus.name}"
 
 	private fun soldierStatus(soldier: Soldier) : SoldierStatus =
-		soldiersStatuses.soldierStatus(soldier) ?: throw IllegalStateException("Found soldier '${soldier} in battle with unknown status")
+		soldiersStatuses.soldierStatus(soldier) ?: throw InvalidState("Found soldier '${soldier} in battle with unknown status")
+
+	private fun isAlive(soldier: Soldier): Boolean = soldierStatus(soldier).isAlive()
 
 }

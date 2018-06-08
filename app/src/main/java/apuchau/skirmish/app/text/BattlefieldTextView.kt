@@ -24,6 +24,7 @@ class BattlefieldTextView(context: Context?) : TextView(context), BattlefieldVie
 
 	override fun displayBattleSnapshot(snapshot: BattleSnapshot) {
 		setText(createBattleStatusTextVersion(snapshot))
+		invalidate()
 	}
 
 	private fun createBattleStatusTextVersion(battleSnapshot: BattleSnapshot): String {

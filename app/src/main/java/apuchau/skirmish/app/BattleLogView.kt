@@ -22,5 +22,6 @@ class BattleLogView(context: Context?) : TextView(context) {
 			entry -> strBuilder.appendln(entry)
 		}
 		setText(strBuilder.toString())
+		invalidate()
 	}
 }
