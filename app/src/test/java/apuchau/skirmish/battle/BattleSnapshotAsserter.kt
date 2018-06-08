@@ -33,9 +33,7 @@ class BattleSnapshotAsserter(val snapshot: BattleSnapshot) {
 		return this
 	}
 
-	fun assertLogEntries(logEntries: List<String>) {
-		logEntries.forEach {
-			logEntry -> assertTrue(snapshot.battleLog.contains(logEntry))
-		}
+	fun assertLog(expectedEntries: List<String>) {
+		assertEquals( expectedEntries, snapshot.battleLog.entries(), "Log entries")
 	}
 }

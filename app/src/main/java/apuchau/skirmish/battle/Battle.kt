@@ -1,6 +1,7 @@
 package apuchau.skirmish.battle
 
 import apuchau.skirmish.army.Army
+import apuchau.skirmish.battle.fight.AttackResult
 import apuchau.skirmish.battle.log.BattleLog
 import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.battlefield.BattlefieldPosition
@@ -150,15 +151,23 @@ class Battle private constructor(private val battlefield: Battlefield,
 
 	private fun resolveFighting() {
 		soldiersActions.soldiersThatAreFighting()
-			.forEach { soldier -> resolveAttach(soldier) }
+			.forEach { soldier -> resolveAttacks(soldier) }
 	}
 
-	private fun resolveAttach(soldier: Soldier) {
-		enemiesAdjacentTo(soldier)
-			.forEach {
-				adjacentSoldier -> soldiersStatuses =
-				soldiersStatuses.byChangingSoldierStatus(adjacentSoldier, calculateStatusAfterBeenHit(adjacentSoldier))}
+	private fun resolveAttacks(soldier: Soldier) {
+
+		val attackResults = enemiesAdjacentTo(soldier)
+			.map { adjacentSoldier -> resolveAttack(soldier, adjacentSoldier) }
+
+		attackResults.forEach { attachResult ->
+			soldiersStatuses = soldiersStatuses.byChangingSoldierStatus(attachResult.defender, attachResult.newDefenderStatus)}
+
+		val logEntries = attackResults.map { logEntryForAttack(it) }
+		battleLog = battleLog.byAddingEntries(logEntries)
 	}
+
+	private fun resolveAttack(attacker: Soldier, defender: Soldier): AttackResult =
+		AttackResult(attacker, defender, calculateStatusAfterBeenHit(defender))
 
 	private fun calculateStatusAfterBeenHit(soldier: Soldier): SoldierStatus =
 		when(soldierStatus(soldier)) {
@@ -166,6 +175,9 @@ class Battle private constructor(private val battlefield: Battlefield,
 			SoldierStatus.WOUNDED -> SoldierStatus.DEAD
 			else -> throw IllegalStateException("Don't know how to process a hit to a soldier in status: ${soldierStatus(soldier)}")
 		}
+
+	private fun logEntryForAttack(attackResult: AttackResult): String =
+		"${attackResult.attacker.soldierId.uniqueName} hit ${attackResult.defender.soldierId.uniqueName} who is now ${attackResult.newDefenderStatus.name}"
 
 	private fun soldierStatus(soldier: Soldier) : SoldierStatus =
 		soldiersStatuses.soldierStatus(soldier) ?: throw IllegalStateException("Found soldier '${soldier} in battle with unknown status")

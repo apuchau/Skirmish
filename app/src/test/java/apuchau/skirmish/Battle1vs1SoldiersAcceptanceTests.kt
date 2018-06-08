@@ -37,6 +37,11 @@ class Battle1vs1SoldiersAcceptanceTests {
 		 assertBattleSnapshot(battle.snapshot())
 			 .assertAllSoldiersIdle()
 			 .assertAllSoldiersHealthy()
+			 .assertLog(
+				 listOf(
+					 "Soldier King Arthur starts at position (1, 1)",
+					 "Soldier Mordred starts at position (2, 1)"
+				 ))
 
 		 // If two soldiers are next to each other, they fight
 
@@ -46,16 +51,31 @@ class Battle1vs1SoldiersAcceptanceTests {
 			 .assertAllSoldiersBattling()
 			 .assertSoldierIsWounded(KingArthur)
 			 .assertSoldierIsWounded(Mordred)
-			 .assertLogEntries(
+			 .assertLog(
 				 listOf(
+					 "Soldier King Arthur starts at position (1, 1)",
+					 "Soldier Mordred starts at position (2, 1)",
 					 "King Arthur started fighting",
-					 "Mordred started fighting"
+					 "Mordred started fighting",
+					 "King Arthur hit Mordred who is now WOUNDED",
+					 "Mordred hit King Arthur who is now WOUNDED"
 				 ))
 
 		 battle.timeCycle()
 
 		 assertBattleSnapshot(battle.snapshot())
 			 .assertAllSoldiersDead()
+			 .assertLog(
+				 listOf(
+					 "Soldier King Arthur starts at position (1, 1)",
+					 "Soldier Mordred starts at position (2, 1)",
+					 "King Arthur started fighting",
+					 "Mordred started fighting",
+					 "King Arthur hit Mordred who is now WOUNDED",
+					 "Mordred hit King Arthur who is now WOUNDED",
+					 "King Arthur hit Mordred who is now DEAD",
+					 "Mordred hit King Arthur who is now DEAD"
+				 ))
     }
 
 	private fun assertBattleSnapshot(snapshot: BattleSnapshot): BattleSnapshotAsserter =

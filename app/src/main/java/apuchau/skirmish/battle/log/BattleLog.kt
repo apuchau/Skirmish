@@ -22,7 +22,7 @@ class BattleLog private constructor(private val logEntries : List<String>) {
 
 	override fun toString(): String = "BattleLog"
 
-	fun contains(logEntry: String): Boolean = logEntries.contains(logEntry)
+	fun entries() : List<String> = logEntries
 
 	fun forEachEntry(fn: (String) -> Unit) {
 		logEntries.forEach(fn)
