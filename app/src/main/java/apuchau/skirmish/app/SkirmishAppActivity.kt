@@ -77,7 +77,7 @@ class SkirmishAppActivity : Activity() {
 	private fun startBattleCycleTimer() {
 		Timer("SkimishAppBattleTimeCycle", true).scheduleAtFixedRate(
 			timerTask({ battleTimerTick() }),
-			0, 1000)
+			200, 1000)
 	}
 
 	private fun battleTimerTick() {
