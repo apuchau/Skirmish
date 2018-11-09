@@ -38,4 +38,10 @@ class SoldiersStatuses private constructor(val soldiersStatuses: Map<Soldier,Sol
 		return SoldiersStatuses(newSoldiersStatuses)
 	}
 
+	fun soldiersAlive(): List<Soldier> {
+		return soldiersStatuses
+			.entries.filterNot { mapEntry -> mapEntry.value == SoldierStatus.DEAD }
+			.map { mapEntry -> mapEntry.key }
+	}
+
 }

@@ -4,7 +4,9 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.widget.LinearLayout
+import apuchau.skirmish.app.view.takeSnapshot
 import apuchau.skirmish.army.Army
 import apuchau.skirmish.battle.Battle
 import apuchau.skirmish.battle.SoldiersBattlePositions
@@ -16,7 +18,6 @@ import apuchau.skirmish.soldier.SoldierId
 import com.natpryce.onError
 import java.util.*
 import kotlin.concurrent.timerTask
-
 
 class SkirmishAppActivity : Activity() {
 
@@ -31,6 +32,11 @@ class SkirmishAppActivity : Activity() {
 		createBattle()
 		createBattleView()
 		startBattle()
+	}
+
+	fun startBattle() {
+		displayBattle()
+		startBattleCycleTimer()
 	}
 
 	private fun createBattle() {
@@ -69,15 +75,10 @@ class SkirmishAppActivity : Activity() {
 		setContentView(battleView)
 	}
 
-	private fun startBattle() {
-		displayBattle()
-		startBattleCycleTimer()
-	}
-
 	private fun startBattleCycleTimer() {
 		Timer("SkimishAppBattleTimeCycle", true).scheduleAtFixedRate(
 			timerTask({ battleTimerTick() }),
-			200, 1000)
+			200, 3000)
 	}
 
 	private fun battleTimerTick() {
@@ -90,7 +91,17 @@ class SkirmishAppActivity : Activity() {
 	}
 
 	fun displayBattle() {
-		battle?.let { battleView?.displayBattleSnapshot(it.snapshot()) }
+		val battleViewSnapshot = battleView
+		battle?.let { battleViewSnapshot?.displayBattleSnapshot(it.snapshot()) }
+		battleViewSnapshot?.let {
+
+			(battleViewSnapshot as View).getViewTreeObserver().addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+				override fun onGlobalLayout() {
+					battleViewSnapshot.getViewTreeObserver().removeOnGlobalLayoutListener(this)
+					(battleViewSnapshot as View).takeSnapshot(applicationContext, "battleview screenshot.png")
+				}
+			})
+		}
 	}
 
 	fun battlefieldPosition(x: Int, y: Int) =

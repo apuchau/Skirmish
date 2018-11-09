@@ -16,8 +16,9 @@ class Battle private constructor(private val battlefield: Battlefield,
 											private val armies: Set<Army>,
 											private var soldiersStatuses: SoldiersStatuses,
 											private val soldiersPositions: SoldiersBattlePositions,
-											private var soldiersActions: SoldiersBattleActions,
 											private var battleLog: BattleLog) {
+
+	private var soldiersActions : SoldiersBattleActions = SoldiersBattleActions.withAllDoingNothing(soldiersPositions.soldiers())
 
 	companion object Factory {
 
@@ -37,7 +38,6 @@ class Battle private constructor(private val battlefield: Battlefield,
 					armies,
 					SoldiersStatuses.withAllHealthy(allSoldiers),
 					soldiersPositions,
-					SoldiersBattleActions.withAllDoingNothing(allSoldiers),
 					battleLogForBattleStart(soldiersPositions)))
 			}
 		}
@@ -49,7 +49,7 @@ class Battle private constructor(private val battlefield: Battlefield,
 			armies: Set<Army>,
 			soldiersPositions: SoldiersBattlePositions) =
 
-			armies.all { it.soldiers.any{ soldiersPositions.containsSoldier(it) } }
+			armies.all { army -> army.soldiers.any{ soldiersPositions.containsSoldier(it) } }
 
 
 		private fun doAllSoldiersInBattlefieldBelongsToArmies(

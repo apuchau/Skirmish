@@ -14,6 +14,7 @@ import apuchau.skirmish.battlefield
 import apuchau.skirmish.battlefieldPosition
 import apuchau.skirmish.soldier.Soldier
 import apuchau.skirmish.soldier.SoldierId
+import apuchau.skirmish.soldier.SoldierStatus
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -52,7 +53,7 @@ class BattlefieldTextViewTests {
 	}
 
 	@Test
-	fun when_soldiers_in_battlefield__soldiers_and_battlefield_is_displayed() {
+	fun when_soldiers_in_battlefield__soldiers_and_battlefield_are_displayed() {
 
 		val context = InstrumentationRegistry.getTargetContext()
 		val battlefield = battlefield(3,2)
@@ -72,6 +73,35 @@ class BattlefieldTextViewTests {
 			   "┏━━━┓\n"+
 				"┃   ┃\n"+
 				"┃SS ┃\n"+
+				"┗━━━┛\n"
+
+		assertViewContent(expectedStatusText, view)
+	}
+
+	@Test
+	fun when_soldiers_are_dead__they_are_not_shown_in_battlefield() {
+
+		val context = InstrumentationRegistry.getTargetContext()
+		val battlefield = battlefield(3,2)
+		val soldiersStatuses=
+			SoldiersStatuses.withAllHealthy(allSoldiers)
+				.byChangingSoldierStatus(Mordred, SoldierStatus.DEAD)
+
+		val battlePositions = SoldiersBattlePositions(listOf(
+			Pair(KingArthur, battlefieldPosition(1,2)),
+			Pair(Mordred, battlefieldPosition(2, 2))
+		))
+		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(allSoldiers)
+		val battleSnapshot = BattleSnapshot(battlefield, soldiersStatuses, battlePositions, soldiersActions, BattleLog.empty())
+
+		val view = BattlefieldTextView(context)
+		view.displayBattleSnapshot(snapshot = battleSnapshot)
+		view.setLayoutParams(ViewGroup.LayoutParams(100,100))
+
+		val expectedStatusText =
+			   "┏━━━┓\n"+
+				"┃   ┃\n"+
+				"┃S  ┃\n"+
 				"┗━━━┛\n"
 
 		assertViewContent(expectedStatusText, view)

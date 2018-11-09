@@ -23,17 +23,29 @@ class SkirmishAppActivityTests {
 	val activityRule = ActivityTestRule<SkirmishAppActivity>(SkirmishAppActivity::class.java)
 
 	@Test
-	fun after_some_cycles_of_battle_displays_battlefield_with_arthur_and_mordred_in_battlefield_and_battle_log() {
+	fun after_battle_starts__displays_battlefield_with_arthur_and_mordred_and_battle_log() {
 
-		waitForThreeBattleCycles()
+		waitForBattleCycles(0)
 		val expectedContent = readTestImage("battlefield_1000x1200_battlefield_arthur_mordred_then_log.png")
 		val viewContent = mainView().rgb8Content().crop(0, 0,1000,1200)
 
 		assertBitmaps(expectedContent, viewContent)
 	}
 
-	private fun waitForThreeBattleCycles() {
-		Thread.sleep(3000)
+	@Test
+	fun after_two_cycles_of_battle_displays_battlefield_with_arthur_and_battle_log_mordred_is_dead() {
+
+		waitForBattleCycles(2)
+		val expectedContent = readTestImage("battlefield_1000x1200_battlefield_arthur_then_log.png")
+		val viewContent = mainView().rgb8Content().crop(0, 0,1000,1200)
+
+		assertBitmaps(expectedContent, viewContent)
+	}
+
+	private fun waitForBattleCycles(cycles: Int) {
+		// The first cycle corresponds to no waiting
+		Thread.sleep( 200L + (cycles * 1000L))
+
 	}
 
 	private fun readTestImage(imagePath: String): Bitmap =
