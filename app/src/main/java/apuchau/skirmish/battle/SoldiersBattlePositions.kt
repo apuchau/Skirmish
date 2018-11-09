@@ -101,7 +101,7 @@ class SoldiersBattlePositions internal constructor(positions : Collection<Pair<S
 		return soldierAndPosition?.first
 	}
 
-	private fun soldierPosition(soldier: Soldier): BattlefieldPosition? {
+	fun soldierPosition(soldier: Soldier): BattlefieldPosition? {
 
 		val soldierAndPosition = soldiersAndPositions
 			.find { it.first == soldier }
