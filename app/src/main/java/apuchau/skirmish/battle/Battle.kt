@@ -12,6 +12,8 @@ import com.natpryce.Err
 import com.natpryce.Ok
 import com.natpryce.Result
 
+// TODO - Do I need battle class?  Does it have to be mutable / store data of the battle?
+
 class Battle private constructor(private val battlefield: Battlefield,
 											private val armies: Set<Army>,
 											private var soldiersStatuses: SoldiersStatuses,
@@ -75,7 +77,9 @@ class Battle private constructor(private val battlefield: Battlefield,
 	}
 
 	fun snapshot(): BattleSnapshot {
-		return BattleSnapshot(battlefield, soldiersStatuses, soldiersPositions, soldiersActions, battleLog)
+
+		val soldiersInBattle = SoldiersInBattle(soldiersStatuses, soldiersPositions, soldiersActions)
+		return BattleSnapshot(battlefield, soldiersInBattle, battleLog)
 	}
 
 	override fun toString(): String {

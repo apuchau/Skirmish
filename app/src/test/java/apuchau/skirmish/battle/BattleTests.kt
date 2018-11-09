@@ -13,6 +13,9 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.fail
 
+private val soldierA1 = Soldier(SoldierId("SoldierA1"))
+private val soldierB1 = Soldier(SoldierId("SoldierB1"))
+
 class BattleTests {
 
 	@Test
@@ -21,12 +24,12 @@ class BattleTests {
 		val battlefield = createBattlefield(2,1)
 
 		val armies = setOf(
-			createArmy("Army A", setOf(Soldier(SoldierId("SoldierA1"))))
+			createArmy("Army A", setOf(soldierA1))
 		)
 
 		assertError(
 			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
-				Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(1,1))
+				Pair(soldierA1, battlefieldPosition(1,1))
 			))),
 			"Not enough armies to battle"
 		)
@@ -38,14 +41,14 @@ class BattleTests {
 		val battlefield = createBattlefield(3,1)
 
 		val armies = setOf(
-			createArmy("Army A", setOf(Soldier(SoldierId("SoldierA1")))),
-			createArmy("Army B", setOf(Soldier(SoldierId("SoldierB1"))))
+			createArmy("Army A", setOf(soldierA1)),
+			createArmy("Army B", setOf(soldierB1))
 		)
 
 		assertError(
 			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
-				Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(1,1)),
-				Pair(Soldier(SoldierId("SoldierB1")), battlefieldPosition(2,1)),
+				Pair(soldierA1, battlefieldPosition(1,1)),
+				Pair(soldierB1, battlefieldPosition(2,1)),
 				Pair(Soldier(SoldierId("SoldierC1")), battlefieldPosition(3,1))
 			))),
 			"Not all soldiers in the battlefield belong to armies")
@@ -57,20 +60,20 @@ class BattleTests {
 		val battlefield = createBattlefield(2,1)
 
 		val armies = setOf(
-			createArmy("Army A", setOf(Soldier(SoldierId("SoldierA1")))),
-			createArmy("Army B", setOf(Soldier(SoldierId("SoldierB1"))))
+			createArmy("Army A", setOf(soldierA1)),
+			createArmy("Army B", setOf(soldierB1))
 		)
 
 		assertError (
 			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
-				Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(1,1))
+				Pair(soldierA1, battlefieldPosition(1,1))
 			))),
 			"Not all armies are represented in the battlefield"
 		)
 
 		assertError(
 			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
-				Pair(Soldier(SoldierId("SoldierB1")), battlefieldPosition(1,1))
+				Pair(soldierB1, battlefieldPosition(1,1))
 			))),
 			"Not all armies are represented in the battlefield"
 		)
@@ -82,14 +85,14 @@ class BattleTests {
 		val battlefield = createBattlefield(2,1)
 
 		val armies = setOf(
-			createArmy("Army A", setOf(Soldier(SoldierId("SoldierA1")))),
-			createArmy("Army B", setOf(Soldier(SoldierId("SoldierB1"))))
+			createArmy("Army A", setOf(soldierA1)),
+			createArmy("Army B", setOf(soldierB1))
 		)
 
 		assertError(
 			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
-				Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(1,1)),
-				Pair(Soldier(SoldierId("SoldierB1")), battlefieldPosition(3,1))
+				Pair(soldierA1, battlefieldPosition(1,1)),
+				Pair(soldierB1, battlefieldPosition(3,1))
 			))),
 			"Some positions are out of the battlefield bounds"
 		)
@@ -101,26 +104,22 @@ class BattleTests {
 		val battlefield = createBattlefield(3,5)
 
 		val armies = setOf(
-			createArmy("Army A", setOf(Soldier(SoldierId("SoldierA1")))),
-			createArmy("Army B", setOf(Soldier(SoldierId("SoldierB1"))))
+			createArmy("Army A", setOf(soldierA1)),
+			createArmy("Army B", setOf(soldierB1))
 		)
 
 		val result =
 			Battle.instance(battlefield, armies, SoldiersBattlePositions(listOf(
-				Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(3,1)),
-				Pair(Soldier(SoldierId("SoldierB1")), battlefieldPosition(1,5))
+				Pair(soldierA1, battlefieldPosition(3,1)),
+				Pair(soldierB1, battlefieldPosition(1,5))
 			)))
 
 		result.onError { fail("Battle with soldiers in battlefield edge is allowed, but has failed creation") }
 
-		val expectedSoldiersPositions = SoldiersBattlePositions.create(listOf(
-				Pair(Soldier(SoldierId("SoldierA1")), battlefieldPosition(3,1)),
-				Pair(Soldier(SoldierId("SoldierB1")), battlefieldPosition(1,5))))
+		val soldiersInBattle = result.valueOrNull()?.snapshot()!!.soldiersInBattle
 
-		assertEquals(
-			expectedSoldiersPositions.valueOrNull(),
-			result.valueOrNull()?.snapshot()?.soldiersBattlePositions,
-			"Soldiers in the battle")
+		assertEquals(battlefieldPosition(3, 1), soldiersInBattle.soldierPosition(soldierA1))
+		assertEquals(battlefieldPosition(1, 5), soldiersInBattle.soldierPosition(soldierB1))
 	}
 
 

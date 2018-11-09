@@ -1,8 +1,8 @@
 package apuchau.skirmish.app.text
 
 import apuchau.skirmish.battle.BattleSnapshot
-import apuchau.skirmish.battle.SoldiersBattlePositions
-import apuchau.skirmish.battle.SoldiersStatuses
+import apuchau.skirmish.battle.SoldierInBattle
+import apuchau.skirmish.battle.SoldiersInBattle
 import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.battlefield.BattlefieldBoundaries
 import apuchau.skirmish.battlefield.BattlefieldPosition
@@ -13,8 +13,7 @@ fun textRepresentation(battleSnapshot: BattleSnapshot) : String {
 		return displaySoldiersInBattlefield(
 			battlefieldTxt,
 			battleSnapshot.battlefield.boundaries,
-			battleSnapshot.soldiersBattlePositions,
-			battleSnapshot.soldiersStatuses)
+			battleSnapshot.soldiersInBattle)
 }
 
 fun createBattlefield(battlefield: Battlefield): String {
@@ -33,15 +32,13 @@ fun createBattlefield(battlefield: Battlefield): String {
 private fun displaySoldiersInBattlefield(
 	battlefieldTxt: String,
 	battlefieldBoundaries: BattlefieldBoundaries,
-	soldiersBattlePositions: SoldiersBattlePositions,
-	soldiersStatuses: SoldiersStatuses): String {
+	soldiersInBattle: SoldiersInBattle): String {
 
 	val battleTxt = StringBuilder(battlefieldTxt)
 
-	soldiersStatuses
-		.soldiersAlive()
-		.mapNotNull { soldier -> soldiersBattlePositions.soldierPosition(soldier)?.let { Pair(soldier, it) }}
-		.forEach { displaySoldierInBattlefield(battleTxt, battlefieldBoundaries, it.second)}
+	soldiersInBattle
+		.alive()
+		.forEach { soldierInBattle -> displaySoldierInBattlefield(battleTxt, battlefieldBoundaries, soldierInBattle)}
 
 	return battleTxt.toString()
 }
@@ -49,9 +46,9 @@ private fun displaySoldiersInBattlefield(
 private fun displaySoldierInBattlefield(
 	battleTxt: StringBuilder,
 	battlefieldBoundaries: BattlefieldBoundaries,
-	position: BattlefieldPosition) {
+	soldierInBattle: SoldierInBattle) {
 
-	val positionInTxt = toPositionInText(position, battlefieldBoundaries)
+	val positionInTxt = toPositionInText(soldierInBattle.position, battlefieldBoundaries)
 	battleTxt.replace(positionInTxt, positionInTxt+1, charForSoldier().toString())
 }
 

@@ -14,22 +14,23 @@ class BattleSnapshotAsserter(val snapshot: BattleSnapshot) {
 		assertAllSoldiersDoing(SoldierAction.FIGHT)
 
 	private fun assertAllSoldiersDoing(expectedAction: SoldierAction): BattleSnapshotAsserter {
-		assertTrue(snapshot.soldiersActions.areAllSoldiersDoing(expectedAction))
+
+		assertTrue(snapshot.soldiersInBattle.soldiersActions.areAllSoldiersDoing(expectedAction))
 		return this
 	}
 
 	fun assertAllSoldiersHealthy() : BattleSnapshotAsserter {
-		assertTrue(snapshot.soldiersStatuses.areAllSoldiersHealthy())
+		assertTrue(snapshot.soldiersInBattle.soldiersStatuses.areAllSoldiersHealthy())
 		return this
 	}
 
 	fun assertSoldierIsWounded(soldier: Soldier): BattleSnapshotAsserter {
-		assertEquals(snapshot.soldiersStatuses.soldierStatus(soldier), SoldierStatus.WOUNDED)
+		assertEquals(snapshot.soldiersInBattle.soldiersStatuses.soldierStatus(soldier), SoldierStatus.WOUNDED)
 		return this
 	}
 
 	fun assertSoldierIsDead(soldier: Soldier): BattleSnapshotAsserter {
-		assertEquals(snapshot.soldiersStatuses.soldierStatus(soldier), SoldierStatus.DEAD)
+		assertEquals(snapshot.soldiersInBattle.soldiersStatuses.soldierStatus(soldier), SoldierStatus.DEAD)
 		return this
 	}
 

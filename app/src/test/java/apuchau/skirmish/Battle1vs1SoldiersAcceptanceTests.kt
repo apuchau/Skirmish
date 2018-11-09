@@ -116,9 +116,7 @@ class Battle1vs1SoldiersAcceptanceTests {
 
 		var expectedSnapshot = BattleSnapshot(
 			battlefield,
-			soldiersStatuses,
-			startingBattlePositions,
-			startingSoldiersActions,
+			SoldiersInBattle(soldiersStatuses, startingBattlePositions, startingSoldiersActions),
 			BattleLog.empty()
 		)
 
@@ -130,9 +128,7 @@ class Battle1vs1SoldiersAcceptanceTests {
 
 		expectedSnapshot = BattleSnapshot(
 			battlefield,
-			soldiersStatuses,
-			startingBattlePositions,
-			startingSoldiersActions,
+			SoldiersInBattle(soldiersStatuses, startingBattlePositions, startingSoldiersActions),
 			BattleLog.empty()
 		)
 

@@ -5,10 +5,7 @@ import android.support.test.runner.AndroidJUnit4
 import android.view.ViewGroup
 import android.widget.TextView
 import apuchau.skirmish.app.BattlefieldView
-import apuchau.skirmish.battle.BattleSnapshot
-import apuchau.skirmish.battle.SoldiersBattleActions
-import apuchau.skirmish.battle.SoldiersBattlePositions
-import apuchau.skirmish.battle.SoldiersStatuses
+import apuchau.skirmish.battle.*
 import apuchau.skirmish.battle.log.BattleLog
 import apuchau.skirmish.battlefield
 import apuchau.skirmish.battlefieldPosition
@@ -33,10 +30,13 @@ class BattlefieldTextViewTests {
 
 		val context = InstrumentationRegistry.getTargetContext()
 		val battlefield = battlefield(3,2)
-		val soldiersStatuses = SoldiersStatuses.withAllHealthy(allSoldiers)
+		val soldiersStatuses = SoldiersStatuses.withAllHealthy(emptyList())
 		val battlePositions = SoldiersBattlePositions(emptyList())
-		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(allSoldiers)
-		val battleSnapshot = BattleSnapshot(battlefield, soldiersStatuses, battlePositions, soldiersActions, BattleLog.empty())
+		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(emptyList())
+		val battleSnapshot = BattleSnapshot(
+			battlefield,
+			SoldiersInBattle(soldiersStatuses, battlePositions, soldiersActions),
+			BattleLog.empty())
 
 		val view = BattlefieldTextView(context)
 		view.displayBattleSnapshot(snapshot = battleSnapshot)
@@ -63,7 +63,10 @@ class BattlefieldTextViewTests {
 			Pair(Mordred, battlefieldPosition(2, 2))
 		))
 		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(allSoldiers)
-		val battleSnapshot = BattleSnapshot(battlefield, soldiersStatuses, battlePositions, soldiersActions, BattleLog.empty())
+		val battleSnapshot = BattleSnapshot(
+			battlefield,
+			SoldiersInBattle(soldiersStatuses, battlePositions, soldiersActions),
+			BattleLog.empty())
 
 		val view = BattlefieldTextView(context)
 		view.displayBattleSnapshot(snapshot = battleSnapshot)
@@ -92,7 +95,10 @@ class BattlefieldTextViewTests {
 			Pair(Mordred, battlefieldPosition(2, 2))
 		))
 		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(allSoldiers)
-		val battleSnapshot = BattleSnapshot(battlefield, soldiersStatuses, battlePositions, soldiersActions, BattleLog.empty())
+		val battleSnapshot = BattleSnapshot(
+			battlefield,
+			SoldiersInBattle(soldiersStatuses, battlePositions, soldiersActions),
+			BattleLog.empty())
 
 		val view = BattlefieldTextView(context)
 		view.displayBattleSnapshot(snapshot = battleSnapshot)
