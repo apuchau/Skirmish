@@ -27,12 +27,13 @@ class Battle1vs1SoldiersAcceptanceTests {
     @Test
     fun a_skirmish_with_two_soldiers_next_to_each_other_and_fighting_to_death() {
 
-		 val startingBattlePositions = SoldiersBattlePositions(listOf(
-			 Pair(KingArthur, battlefieldPosition(1,1)),
-			 Pair(Mordred, battlefieldPosition(2,1))
-		 ))
+		 val kingArthurInBattle = SoldierInBattle.createHealthyDoingNothing(
+			 KingArthur, battlefieldPosition(1,1))
 
-		 val battle = createBattle(battlefield, armies, startingBattlePositions)
+		 val mordredInBattle = SoldierInBattle.createHealthyDoingNothing(
+			 Mordred, battlefieldPosition(2,1))
+
+		 val battle= createBattle(battlefield, armies, listOf(kingArthurInBattle, mordredInBattle))
 
 		 assertBattleSnapshot(battle.snapshot())
 			 .assertAllSoldiersIdle()
@@ -103,20 +104,17 @@ class Battle1vs1SoldiersAcceptanceTests {
 	@Test
 	fun a_skirmish_with_two_soldiers_not_next_to_each_other_cant_fight() {
 
-		val soldiersStatuses = SoldiersStatuses.withAllHealthy(setOf(KingArthur, Mordred))
+		val kingArthurInBattle = SoldierInBattle.createHealthyDoingNothing(
+			KingArthur, battlefieldPosition(1,1))
 
-		val startingBattlePositions = SoldiersBattlePositions(listOf(
-			Pair(KingArthur, battlefieldPosition(1,1)),
-			Pair(Mordred, battlefieldPosition(3,1))
-		))
+		val mordredInBattle = SoldierInBattle.createHealthyDoingNothing(
+			Mordred, battlefieldPosition(3,1))
 
-		val startingSoldiersActions = SoldiersBattleActions.withAllDoingNothing(setOf(KingArthur, Mordred))
-
-		val battle = createBattle(battlefield, armies, startingBattlePositions)
+		val battle = createBattle(battlefield, armies, listOf(kingArthurInBattle, mordredInBattle))
 
 		var expectedSnapshot = BattleSnapshot(
 			battlefield,
-			SoldiersInBattle(soldiersStatuses, startingBattlePositions, startingSoldiersActions),
+			SoldiersInBattle(listOf(kingArthurInBattle, mordredInBattle)),
 			BattleLog.empty()
 		)
 
@@ -128,7 +126,7 @@ class Battle1vs1SoldiersAcceptanceTests {
 
 		expectedSnapshot = BattleSnapshot(
 			battlefield,
-			SoldiersInBattle(soldiersStatuses, startingBattlePositions, startingSoldiersActions),
+			SoldiersInBattle(listOf(kingArthurInBattle, mordredInBattle)),
 			BattleLog.empty()
 		)
 
@@ -137,8 +135,8 @@ class Battle1vs1SoldiersAcceptanceTests {
 
 	private fun createBattle(battlefield: Battlefield,
 									 armies: Set<Army>,
-									 soldiersPositions: SoldiersBattlePositions): Battle {
-		return Battle.instance(battlefield, armies, soldiersPositions)
+									 soldiersInBattle: Collection<SoldierInBattle>): Battle {
+		return Battle.instance(battlefield, armies, soldiersInBattle)
 			.onError { throw Exception("Can't create battle. ${it.reason}") }
 	}
 

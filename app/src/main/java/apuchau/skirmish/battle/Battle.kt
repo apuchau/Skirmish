@@ -5,7 +5,6 @@ import apuchau.skirmish.army.Army
 import apuchau.skirmish.battle.fight.AttackResult
 import apuchau.skirmish.battle.log.BattleLog
 import apuchau.skirmish.battlefield.Battlefield
-import apuchau.skirmish.battlefield.BattlefieldPosition
 import apuchau.skirmish.soldier.Soldier
 import apuchau.skirmish.soldier.SoldierStatus
 import com.natpryce.Err
@@ -16,74 +15,78 @@ import com.natpryce.Result
 
 class Battle private constructor(private val battlefield: Battlefield,
 											private val armies: Set<Army>,
-											private var soldiersStatuses: SoldiersStatuses,
-											private val soldiersPositions: SoldiersBattlePositions,
+											private var soldiersInBattle: SoldiersInBattle,
 											private var battleLog: BattleLog) {
 
-	private var soldiersActions : SoldiersBattleActions = SoldiersBattleActions.withAllDoingNothing(soldiersPositions.soldiers())
+	// TODO - Make soldiersInBattle and battleLog immutable (Battle will became a snapshot, or maybe we create BattleStatus as snapshot (just data),
+	// and the Battle can have the fighting engine, etc...)
 
 	companion object Factory {
 
 		fun instance(battlefield: Battlefield,
 						 armies: Set<Army>,
-						 soldiersPositions: SoldiersBattlePositions) : Result<Battle,String> {
-
-			val allSoldiers = armies.map { army -> army.soldiers }.flatten()
+						 soldiersInBattle: Collection<SoldierInBattle>): Result<Battle, String> {
 
 			return when {
 				!areThereEnoughArmies(armies) -> Err("Not enough armies to battle")
-				!doAllArmiesHaveRepresentationInBattlefield(armies, soldiersPositions) -> Err("Not all armies are represented in the battlefield")
-				!doAllSoldiersInBattlefieldBelongsToArmies(armies, soldiersPositions) -> Err("Not all soldiers in the battlefield belong to armies")
-				!areAllPositionsAreInBattlefieldBounds(battlefield, soldiersPositions) -> Err("Some positions are out of the battlefield bounds")
-				else -> Ok(Battle(
-					battlefield,
-					armies,
-					SoldiersStatuses.withAllHealthy(allSoldiers),
-					soldiersPositions,
-					battleLogForBattleStart(soldiersPositions)))
+				!doAllArmiesHaveRepresentationInBattlefield(armies, soldiersInBattle) -> Err("Not all armies are represented in the battlefield")
+				!doAllSoldiersInBattlefieldBelongToArmies(armies, soldiersInBattle) -> Err("Not all soldiers in the battlefield belong to armies")
+				!areAllPositionsInBattlefieldBounds(battlefield, soldiersInBattle) -> Err("Some positions are out of the battlefield bounds")
+				areAnySoldiersInSamePosition(soldiersInBattle) -> Err("Some soldiers are in the same position")
+				areAnySoldiersDuplicatedInTheBattle(soldiersInBattle) -> Err("Some soldiers are duplicated")
+				else -> Ok(
+					Battle(
+						battlefield,
+						armies,
+						SoldiersInBattle(soldiersInBattle),
+						battleLogForBattleStart(soldiersInBattle)))
 			}
+		}
+
+		private fun areAnySoldiersInSamePosition(soldiersInBattle: Collection<SoldierInBattle>): Boolean {
+
+			val numDifferentPositions = soldiersInBattle.map { it.position }.distinct().count()
+			return numDifferentPositions != soldiersInBattle.count()
+		}
+
+		private fun areAnySoldiersDuplicatedInTheBattle(soldiersInBattle: Collection<SoldierInBattle>): Boolean {
+
+			val numDifferentSoldiers = soldiersInBattle.map { it.soldier }.distinct().count()
+			return numDifferentSoldiers != soldiersInBattle.count()
 		}
 
 		private fun areThereEnoughArmies(armies: Set<Army>) = (armies.size >= 2)
 
 
-		private fun doAllArmiesHaveRepresentationInBattlefield(
+		private fun doAllArmiesHaveRepresentationInBattlefield(armies: Collection<Army>, soldiersInBattle: Collection<SoldierInBattle>) =
+
+			armies.all { army -> army.soldiers.any { armySoldier -> soldiersInBattle.any { it.soldier == armySoldier } } }
+
+
+		private fun doAllSoldiersInBattlefieldBelongToArmies(
 			armies: Set<Army>,
-			soldiersPositions: SoldiersBattlePositions) =
+			soldiersInBattle: Collection<SoldierInBattle>) =
 
-			armies.all { army -> army.soldiers.any{ soldiersPositions.containsSoldier(it) } }
-
-
-		private fun doAllSoldiersInBattlefieldBelongsToArmies(
-			armies: Set<Army>,
-			soldiersPositions: SoldiersBattlePositions) =
-
-			soldiersPositions.soldiers().all{ soldier -> armies.any{ it.containsSoldier(soldier) } }
+			soldiersInBattle.map { it.soldier }.all { soldier -> armies.any { it.containsSoldier(soldier) } }
 
 
-		private fun areAllPositionsAreInBattlefieldBounds(
-			battlefield: Battlefield,
-			soldiersPositions: SoldiersBattlePositions) =
+		private fun areAllPositionsInBattlefieldBounds(battlefield: Battlefield, soldiersInBattle: Collection<SoldierInBattle>) =
 
-			soldiersPositions.areAllWithinBounds(battlefield.boundaries)
+			soldiersInBattle.all { battlefield.boundaries.within(it.position) }
 
-		private fun battleLogForBattleStart(soldiersPositions: SoldiersBattlePositions): BattleLog =
-			BattleLog.withEntries( soldiersPositions.map { logEntryForStartingPosition(it) } )
+		private fun battleLogForBattleStart(soldiersInBattle: Collection<SoldierInBattle>): BattleLog =
+			BattleLog.withEntries(soldiersInBattle.map { logEntryForSoldierStartingTheBattle(it) })
 
-		private fun logEntryForStartingPosition(soldierBattlePosition: Pair<Soldier, BattlefieldPosition>): String {
-			return "Soldier ${soldierBattlePosition.first.soldierId.uniqueName} starts at position (${soldierBattlePosition.second.x}, ${soldierBattlePosition.second.y})"
+		private fun logEntryForSoldierStartingTheBattle(soldierInBattle: SoldierInBattle): String {
+			return "Soldier ${soldierInBattle.soldier.soldierId.uniqueName} starts at position (${soldierInBattle.position.x}, ${soldierInBattle.position.y})"
 		}
 
 	}
 
-	fun snapshot(): BattleSnapshot {
-
-		val soldiersInBattle = SoldiersInBattle(soldiersStatuses, soldiersPositions, soldiersActions)
-		return BattleSnapshot(battlefield, soldiersInBattle, battleLog)
-	}
+	fun snapshot(): BattleSnapshot = BattleSnapshot(battlefield, soldiersInBattle, battleLog)
 
 	override fun toString(): String {
-		return "Battle. Battlefield: $battlefield, Armies: $armies, Positions: $soldiersPositions, Statuses: ${soldiersStatuses}"
+		return "Battle. Battlefield: $battlefield, Armies: $armies, Status: $soldiersInBattle"
 	}
 
 	private fun armyOf(soldier: Soldier): Army =
@@ -99,18 +102,26 @@ class Battle private constructor(private val battlefield: Battlefield,
 
 		val actionsCalculationResult =
 			allLiveSoldiers()
-			.map { soldier -> newSoldierAction(soldier) }
-			.toList()
+				.map { soldier ->
+					ActionCalculationResult(
+						soldier, currentActionForSoldier(soldier), calculateNewActionForSoldier(soldier))
+				}
+				.toList()
 
-		actionsCalculationResult.forEach {
-			soldiersActions = soldiersActions.byChangingSoldierAction(it.soldier, it.newAction)
+		val soldiersNewActions = actionsCalculationResult.map {
+			Pair(it.soldier, it.newAction)
 		}
+
+		soldiersInBattle = soldiersInBattle.applyNewSoldierActions(soldiersNewActions)
 
 		battleLog = battleLog.byAddingEntries(calculateLogEntries(actionsCalculationResult))
 	}
 
-	private fun newSoldierAction(soldier: Soldier) =
-		ActionCalculationResult(soldier, currentActionForSoldier(soldier), calculateSoldierAction(soldier))
+	private fun calculateNewActionForSoldier(soldier: Soldier): SoldierAction =
+		when {
+			hasAdjacentEnemiesAlive(soldier) -> SoldierAction.FIGHT
+			else -> SoldierAction.DO_NOTHING
+		}
 
 	private fun allLiveSoldiers(): List<Soldier> {
 		return armies
@@ -125,9 +136,11 @@ class Battle private constructor(private val battlefield: Battlefield,
 			.filterNotNull()
 			.toList()
 
+	// TODO - Remove the exception, we should be ok with nullable object
+
 	private fun currentActionForSoldier(soldier: Soldier): SoldierAction =
 
-		soldiersActions.actionForSoldier(soldier) ?: throw InvalidState("Soldier '${soldier}' doesn't have a current action")
+		soldiersInBattle.actionForSoldier(soldier) ?: throw InvalidState("Soldier '${soldier}' doesn't have a current action")
 
 	private fun calculateLogEntry(actionResult: ActionCalculationResult): String? =
 		when {
@@ -137,51 +150,61 @@ class Battle private constructor(private val battlefield: Battlefield,
 			else -> null
 		}
 
-	private fun calculateSoldierAction(soldier: Soldier): SoldierAction {
-		return if (hasAdjacentEnemiesAlive(soldier)) {
-			SoldierAction.FIGHT
-		}
-		else {
-			SoldierAction.DO_NOTHING
-		}
-	}
-
 	private fun hasAdjacentEnemiesAlive(soldier: Soldier): Boolean =
 		enemiesAdjacentTo(soldier)
-			.filter { adjacentSoldier -> isAlive(adjacentSoldier) }
+			.filter { adjacentSoldier -> adjacentSoldier.isAlive() }
 			.isNotEmpty()
 
-	private fun enemiesAdjacentTo(soldier: Soldier): Set<Soldier> =
-		soldiersPositions.soldiersAdjacentToSoldier(soldier)
-			.filter { adjacentSoldier -> areSoldierEnemies(soldier, adjacentSoldier) }
+	private fun enemiesAdjacentTo(soldier: Soldier): Set<SoldierInBattle> =
+
+		soldiersInBattle.soldiersAdjacentToSoldier(soldier)
+			.filter { adjacentSoldierInBattle -> areEnemies(soldier, adjacentSoldierInBattle.soldier) }
 			.toSet()
 
-	private fun areSoldierEnemies(soldierA: Soldier, soldierB: Soldier): Boolean =
+	private fun areEnemies(soldierA: Soldier, soldierB: Soldier): Boolean =
 		armyOf(soldierA) != armyOf(soldierB)
 
 	private fun resolveFighting() {
-		soldiersActions.soldiersThatAreFighting()
-			.forEach { soldier -> resolveAttacksOf(soldier) }
+		soldiersInBattle = resolveFighting(soldiersInBattle, emptySet())
 	}
 
-	private fun resolveAttacksOf(soldier: Soldier) {
+	private fun resolveFighting(soldiersInBattle: SoldiersInBattle, processedSoldiers: Set<Soldier>) : SoldiersInBattle {
 
-		if (isAlive(soldier)) {
-			val attackResults = enemiesAdjacentTo(soldier)
-				.filter { adjacentSoldier -> isAlive(adjacentSoldier) }
-				.map { adjacentSoldier -> resolveAttack(soldier, adjacentSoldier) }
-
-			attackResults.forEach { attachResult ->
-				soldiersStatuses = soldiersStatuses.byChangingSoldierStatus(attachResult.defender, attachResult.newDefenderStatus)
+		val soldiersFighting = soldiersInBattle.soldiersFightingInOrderOfBattling()
+		return when {
+			soldiersFighting.isEmpty() -> soldiersInBattle
+			else -> {
+				val soldierAttackingMaybe = soldiersFighting.find { it -> ! processedSoldiers.contains(it.soldier) }
+				soldierAttackingMaybe?.let { soldierAttacking ->
+					val newSoldiersInBattle = resolveSoldierAttacks(soldierAttacking, soldiersInBattle)
+					resolveFighting(newSoldiersInBattle, processedSoldiers.union(hashSetOf(soldierAttacking.soldier)))
+				} ?:soldiersInBattle
 			}
-
-			val logEntries = attackResults.map { logEntryForAttack(it) }
-			battleLog = battleLog.byAddingEntries(logEntries)
 		}
 	}
 
-	private fun resolveAttack(attacker: Soldier, defender: Soldier): AttackResult =
-		AttackResult(attacker, defender, calculateStatusAfterBeenHit(defender))
+	private fun resolveSoldierAttacks(soldierInBattle: SoldierInBattle, soldiersInBattle: SoldiersInBattle) : SoldiersInBattle =
+
+		when {
+			soldierInBattle.isAlive() -> {
+				val attackResults =
+					enemiesAdjacentTo(soldierInBattle.soldier)
+						.filter { it.isAlive() }
+						.map { resolveAttack(soldierInBattle, it.soldier) }
+
+				val logEntries= attackResults.map { logEntryForAttack(it) }
+				battleLog = battleLog.byAddingEntries(logEntries)
+
+				soldiersInBattle.withSoldiersStatuses(attackResults.map {
+					attackResult -> Pair(attackResult.defender, attackResult.newDefenderStatus)
+				})
+			}
+			else -> soldiersInBattle
+		}
+
+
+	private fun resolveAttack(attacker: SoldierInBattle, defender: Soldier): AttackResult =
+		AttackResult(attacker.soldier, defender, calculateStatusAfterBeenHit(defender))
 
 	private fun calculateStatusAfterBeenHit(soldier: Soldier): SoldierStatus =
 		when(soldierStatus(soldier)) {
@@ -193,8 +216,9 @@ class Battle private constructor(private val battlefield: Battlefield,
 	private fun logEntryForAttack(attackResult: AttackResult): String =
 		"${attackResult.attacker.soldierId.uniqueName} hit ${attackResult.defender.soldierId.uniqueName} who is now ${attackResult.newDefenderStatus.name}"
 
+	// TODO - Remove exception, we should be ok with nullity
 	private fun soldierStatus(soldier: Soldier) : SoldierStatus =
-		soldiersStatuses.soldierStatus(soldier) ?: throw InvalidState("Found soldier '${soldier} in battle with unknown status")
+		soldiersInBattle.statusForSoldier(soldier) ?: throw InvalidState("Found soldier '${soldier} in battle with unknown status")
 
 	private fun isAlive(soldier: Soldier): Boolean = soldierStatus(soldier).isAlive()
 

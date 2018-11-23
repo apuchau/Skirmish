@@ -9,12 +9,14 @@ import android.widget.LinearLayout
 import apuchau.skirmish.app.view.takeSnapshot
 import apuchau.skirmish.army.Army
 import apuchau.skirmish.battle.Battle
-import apuchau.skirmish.battle.SoldiersBattlePositions
+import apuchau.skirmish.battle.SoldierAction
+import apuchau.skirmish.battle.SoldierInBattle
 import apuchau.skirmish.battlefield.Battlefield
 import apuchau.skirmish.battlefield.BattlefieldBoundaries
 import apuchau.skirmish.battlefield.BattlefieldPosition
 import apuchau.skirmish.soldier.Soldier
 import apuchau.skirmish.soldier.SoldierId
+import apuchau.skirmish.soldier.SoldierStatus
 import com.natpryce.onError
 import java.util.*
 import kotlin.concurrent.timerTask
@@ -48,12 +50,19 @@ class SkirmishAppActivity : Activity() {
 			createArmy("Mordred's army", setOf(Mordred))
 		)
 
-		val soldiersPositions = SoldiersBattlePositions(listOf(
-			Pair(KingArthur, battlefieldPosition(3,2)),
-			Pair(Mordred, battlefieldPosition(4,2)))
-		)
+		val kingArthurInBattle = SoldierInBattle(
+			KingArthur,
+			battlefieldPosition(3,2),
+			SoldierStatus.HEALTHY,
+			SoldierAction.DO_NOTHING)
 
-		battle = Battle.instance(battlefield, armies, soldiersPositions)
+		val mordredInBattle = SoldierInBattle(
+			Mordred,
+			battlefieldPosition(4,2),
+			SoldierStatus.HEALTHY,
+			SoldierAction.DO_NOTHING)
+
+		battle = Battle.instance(battlefield, armies, listOf(kingArthurInBattle, mordredInBattle))
 			.onError { throw Exception("Can't create battle. ${it.reason}") }
 	}
 

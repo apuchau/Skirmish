@@ -33,4 +33,8 @@ class BattlefieldBoundaries private constructor(val width: Int, val height: Int)
 	override fun toString(): String {
 		return "Boundaries($width,$height)"
 	}
+
+	fun within(position: BattlefieldPosition): Boolean =
+		(position.x > 0) && (position.y > 0)
+		&& (position.x <= width) && (position.y <= height)
 }

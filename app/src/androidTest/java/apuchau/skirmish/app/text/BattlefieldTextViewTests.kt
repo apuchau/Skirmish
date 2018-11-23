@@ -5,7 +5,10 @@ import android.support.test.runner.AndroidJUnit4
 import android.view.ViewGroup
 import android.widget.TextView
 import apuchau.skirmish.app.BattlefieldView
-import apuchau.skirmish.battle.*
+import apuchau.skirmish.battle.BattleSnapshot
+import apuchau.skirmish.battle.SoldierAction
+import apuchau.skirmish.battle.SoldierInBattle
+import apuchau.skirmish.battle.SoldiersInBattle
 import apuchau.skirmish.battle.log.BattleLog
 import apuchau.skirmish.battlefield
 import apuchau.skirmish.battlefieldPosition
@@ -30,12 +33,10 @@ class BattlefieldTextViewTests {
 
 		val context = InstrumentationRegistry.getTargetContext()
 		val battlefield = battlefield(3,2)
-		val soldiersStatuses = SoldiersStatuses.withAllHealthy(emptyList())
-		val battlePositions = SoldiersBattlePositions(emptyList())
-		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(emptyList())
+
 		val battleSnapshot = BattleSnapshot(
 			battlefield,
-			SoldiersInBattle(soldiersStatuses, battlePositions, soldiersActions),
+			SoldiersInBattle(emptyList()),
 			BattleLog.empty())
 
 		val view = BattlefieldTextView(context)
@@ -57,15 +58,13 @@ class BattlefieldTextViewTests {
 
 		val context = InstrumentationRegistry.getTargetContext()
 		val battlefield = battlefield(3,2)
-		val soldiersStatuses = SoldiersStatuses.withAllHealthy(allSoldiers)
-		val battlePositions = SoldiersBattlePositions(listOf(
-			Pair(KingArthur, battlefieldPosition(1,2)),
-			Pair(Mordred, battlefieldPosition(2, 2))
-		))
-		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(allSoldiers)
+
+		val kingArthurInBattle= SoldierInBattle.createHealthyDoingNothing(KingArthur, battlefieldPosition(1,2))
+		val mordredInBattle= SoldierInBattle.createHealthyDoingNothing(Mordred, battlefieldPosition(2,2))
+
 		val battleSnapshot = BattleSnapshot(
 			battlefield,
-			SoldiersInBattle(soldiersStatuses, battlePositions, soldiersActions),
+			SoldiersInBattle(listOf(kingArthurInBattle, mordredInBattle)),
 			BattleLog.empty())
 
 		val view = BattlefieldTextView(context)
@@ -86,18 +85,14 @@ class BattlefieldTextViewTests {
 
 		val context = InstrumentationRegistry.getTargetContext()
 		val battlefield = battlefield(3,2)
-		val soldiersStatuses=
-			SoldiersStatuses.withAllHealthy(allSoldiers)
-				.byChangingSoldierStatus(Mordred, SoldierStatus.DEAD)
 
-		val battlePositions = SoldiersBattlePositions(listOf(
-			Pair(KingArthur, battlefieldPosition(1,2)),
-			Pair(Mordred, battlefieldPosition(2, 2))
-		))
-		val soldiersActions = SoldiersBattleActions.withAllDoingNothing(allSoldiers)
+		val kingArthurInBattle= SoldierInBattle.createHealthyDoingNothing(KingArthur, battlefieldPosition(1,2))
+
+		val mordredInBattle = SoldierInBattle(Mordred, battlefieldPosition(2,2), SoldierStatus.DEAD, SoldierAction.DO_NOTHING)
+
 		val battleSnapshot = BattleSnapshot(
 			battlefield,
-			SoldiersInBattle(soldiersStatuses, battlePositions, soldiersActions),
+			SoldiersInBattle(listOf(kingArthurInBattle, mordredInBattle)),
 			BattleLog.empty())
 
 		val view = BattlefieldTextView(context)
